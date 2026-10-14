@@ -1,0 +1,69 @@
+{
+  "pages": [
+    "pages/home/index",
+    "pages/members/index",
+    "pages/activities/index",
+    "pages/mine/index",
+    "pages/application/index",
+    "pages/member/index",
+    "pages/activity/index",
+    "pages/announcement/index",
+    "pages/profile/index",
+    "pages/registrations/index",
+    "pages/registration/index",
+    "pages/feedback/index",
+    "pages/agreement/index",
+    "pages/about/index",
+    "pages/account/index"
+  ],
+  "window": {
+    "navigationStyle": "custom",
+    "navigationBarTitleText": "西引力.陇聚",
+    "navigationBarBackgroundColor": "#F3EFE6",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#F3EFE6",
+    "enablePullDownRefresh": true
+  },
+  "tabBar": {
+    "custom": true,
+    "color": "#504C43",
+    "selectedColor": "#36524E",
+    "backgroundColor": "#FFFCF5",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/home/index",
+        "text": "首页",
+        "iconPath": "assets/tabs/home.png",
+        "selectedIconPath": "assets/tabs/home-active.png"
+      },
+      {
+        "pagePath": "pages/members/index",
+        "text": "老乡录",
+        "iconPath": "assets/tabs/members.png",
+        "selectedIconPath": "assets/tabs/members-active.png"
+      },
+      {
+        "pagePath": "pages/activities/index",
+        "text": "活动",
+        "iconPath": "assets/tabs/activities.png",
+        "selectedIconPath": "assets/tabs/activities-active.png"
+      },
+      {
+        "pagePath": "pages/mine/index",
+        "text": "我的",
+        "iconPath": "assets/tabs/mine.png",
+        "selectedIconPath": "assets/tabs/mine-active.png"
+      }
+    ]
+  },
+  "usingComponents": {
+    "custom-nav": "/components/custom-nav/index",
+    "load-status": "/components/status/index",
+    "activity-card": "/components/activity-card/index",
+    "profile-form": "/components/profile-form/index"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}

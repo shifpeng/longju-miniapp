@@ -1,0 +1,31 @@
+<custom-nav title="账号与成员资格" back />
+<view class="page">
+  <view class="title">账号与成员资格</view>
+  <load-status loading="{{loading}}" error="{{error}}" bind:retry="load" />
+  <view wx:if="{{closed}}" class="card">
+    <view>注销申请已受理</view>
+    <view class="muted">账号已冻结，资料清理仍在处理中。</view>
+    <button bindtap="home">返回首页</button>
+  </view>
+  <block wx:elif="{{me}}">
+    <view class="card">
+      <view>{{title}}</view>
+      <view class="muted">
+        退出社群会保留账号与已有报名；注销账号会冻结登录并进入资料清理流程。
+      </view>
+    </view>
+    <view wx:if="{{canExit}}" class="card">
+      <view class="section">退出老乡社群</view>
+      <view class="muted">已有报名不会自动取消，可继续在「我的报名」中处理。</view>
+      <button class="secondary" bindtap="exit" disabled="{{saving}}">退出老乡社群</button>
+    </view>
+    <view class="card">
+      <view class="section">注销账号</view>
+      <view class="muted">
+        需要重新验证微信身份。受理后立即冻结账号，资料清理完成时间不等同于受理时间。
+      </view>
+      <button class="secondary" bindtap="close" disabled="{{saving}}">申请注销账号</button>
+    </view>
+    <view class="error">{{actionError}}</view>
+  </block>
+</view>

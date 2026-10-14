@@ -1,0 +1,9 @@
+<view class="custom-nav" style="height: {{height}}px">
+  <view
+    class="custom-nav-title"
+    style="top: {{titleTop}}px; height: {{lineHeight}}px; right: {{rightGap}}px"
+  >
+    <view wx:if="{{back}}" class="custom-nav-back" bindtap="goBack"><view /></view>
+    <text>{{title}}</text>
+  </view>
+</view>

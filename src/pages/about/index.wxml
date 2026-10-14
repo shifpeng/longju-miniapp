@@ -1,0 +1,50 @@
+<custom-nav title="关于西引力.陇聚" back />
+<view class="page">
+  <view class="title">西引力.陇聚</view>
+  <view class="muted">西安 · 甘肃老乡社群</view>
+  <view class="card">
+    相聚长安，共叙陇情。
+    <view>在这里认识老乡、参与相聚，让乡情在这座城继续。</view>
+  </view>
+  <view class="section">图片来源与许可</view>
+  <view class="card">
+    <view>莫高窟装饰图</view>
+    <view class="muted">
+      摄影：G41rn8，Dunhuang 0507 329。CC BY-SA 4.0。经裁切、透明处理、暖色调整与缩小。
+    </view>
+    <button
+      class="link"
+      data-url="https://commons.wikimedia.org/wiki/File:Dunhuang_0507_329.jpg"
+      bindtap="copy"
+    >
+      复制原图来源
+    </button>
+  </view>
+  <view class="card">
+    <view>沙漠驼队背景</view>
+    <view class="muted">
+      驼队摄影：N509FZ，CC BY-SA 4.0；沙丘摄影：David Stanley，CC BY
+      2.0。合成为低对比度砂色背景，衍生图按 CC BY-SA 4.0 许可使用。均为地域装饰，并非社群活动实拍。
+    </view>
+    <button
+      class="link"
+      data-url="https://commons.wikimedia.org/wiki/File:Camel_convoys_at_Singing_Sand_Dunes_(20230918084444).jpg"
+      bindtap="copy"
+    >
+      复制驼队原图来源
+    </button>
+    <button
+      class="link"
+      data-url="https://commons.wikimedia.org/wiki/File:Mingsha_Sand_Dunes_(40098545980).jpg"
+      bindtap="copy"
+    >
+      复制沙丘原图来源
+    </button>
+  </view>
+  <button class="link" data-url="https://creativecommons.org/licenses/by-sa/4.0/" bindtap="copy">
+    复制 CC BY-SA 4.0 许可地址
+  </button>
+  <button class="link" data-url="https://creativecommons.org/licenses/by/2.0/" bindtap="copy">
+    复制 CC BY 2.0 许可地址
+  </button>
+</view>

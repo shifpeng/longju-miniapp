@@ -1,0 +1,36 @@
+{
+  "name": "longju-miniapp",
+  "version": "0.1.0",
+  "private": true,
+  "description": "西引力.陇聚 · 原生微信小程序",
+  "scripts": {
+    "dev": "node scripts/build.mjs --watch",
+    "build": "node scripts/build.mjs && node scripts/check-assets.mjs",
+    "check:assets": "node scripts/check-assets.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "tsx --test tests/*.test.ts",
+    "check": "npm run typecheck && npm test",
+    "contract:sync": "node scripts/sync-contract.mjs",
+    "check:native": "npm run build && node scripts/check-native.mjs",
+    "smoke:api": "node scripts/smoke-api.mjs",
+    "format": "prettier --write \"src/**/*.{ts,wxml,wxss,json}\" \"scripts/*.mjs\" \"tests/*.ts\" \"*.json\"",
+    "format:check": "prettier --check \"src/**/*.{ts,wxml,wxss,json}\" \"scripts/*.mjs\" \"tests/*.ts\" \"*.json\"",
+    "pretest": "npm run build"
+  },
+  "devDependencies": {
+    "@types/node": "26.6.4",
+    "esbuild": "0.28.2",
+    "miniprogram-api-typings": "5.2.3",
+    "openapi-typescript": "7.13.0",
+    "prettier": "3.9.9",
+    "tsx": "4.23.15",
+    "typescript": "5.9.3",
+    "yaml": "2.9.1"
+  },
+  "dependencies": {
+    "qrcode-generator": "2.0.4"
+  },
+  "engines": {
+    "node": ">=22.12"
+  }
+}

@@ -1,0 +1,28 @@
+<custom-nav title="老乡资料" back />
+<view class="page">
+  <load-status loading="{{loading}}" error="{{error}}" bind:retry="load" />
+  <view wx:if="{{member}}" class="card member-detail">
+    <view class="member-detail-header">
+      <image wx:if="{{avatar}}" class="avatar" src="{{avatar}}" mode="aspectFill" />
+      <view class="member-detail-identity">
+        <view class="title">{{member.name}}</view>
+        <view class="muted member-detail-meta">
+          {{member.hometownLabel}} · {{member.residenceLabel}}
+        </view>
+      </view>
+    </view>
+    <view class="member-detail-tags"><text class="badge">{{member.industryLabel}}</text></view>
+    <view class="body member-detail-intro">{{member.introduction || '暂未填写个人介绍'}}</view>
+    <view wx:if="{{member.helpText}}" class="member-detail-help">
+      <view class="section">乐意交流</view>
+      <view class="body">{{member.helpText}}</view>
+    </view>
+    <view class="member-detail-contact">
+      <view wx:if="{{member.phone}}">
+        <view>联系电话：{{member.phone}}</view>
+        <button bindtap="call">拨打电话</button>
+      </view>
+      <view wx:else class="muted">这位老乡未公开联系方式</view>
+    </view>
+  </view>
+</view>

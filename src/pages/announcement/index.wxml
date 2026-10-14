@@ -1,0 +1,10 @@
+<custom-nav title="公告详情" back />
+<view class="page announcement-page">
+  <load-status loading="{{loading}}" error="{{error}}" bind:retry="load" />
+  <view wx:if="{{item}}">
+    <view class="title">{{item.title}}</view>
+    <view class="muted">社群运营组 · {{published}}</view>
+    <view class="announcement-rule" />
+    <text class="announcement-body">{{item.body}}</text>
+  </view>
+</view>

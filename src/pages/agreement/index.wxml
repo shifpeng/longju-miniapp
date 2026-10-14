@@ -1,0 +1,9 @@
+<custom-nav title="加入须知与隐私说明" back />
+<view class="page">
+  <view class="title">{{agreement.title}}</view>
+  <block wx:if="{{agreement.body && agreement.version}}">
+    <view class="muted">版本：{{agreement.version}}</view>
+    <view class="card body">{{agreement.body}}</view>
+  </block>
+  <view wx:else class="card">加入须知与隐私说明暂未发布，目前可直接提交加入申请。</view>
+</view>

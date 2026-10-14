@@ -1,0 +1,41 @@
+<custom-nav title="我的资料与隐私" back />
+<view class="page">
+  <view class="title">我的资料与隐私</view>
+  <load-status loading="{{loading}}" error="{{error}}" bind:retry="load" />
+  <block wx:if="{{profile}}">
+    <profile-form
+      value="{{profile}}"
+      phone-editable="{{false}}"
+      disabled="{{saving || !canEdit}}"
+      bind:change="change"
+    />
+    <view class="muted">联系电话不能在此修改。如需协助，请通过帮助与反馈联系运营组。</view>
+    <view class="card">
+      <view class="row spread">
+        <view class="grow">允许在老乡录展示资料</view>
+        <switch
+          checked="{{profile.directoryVisible}}"
+          disabled="{{saving || !canEdit}}"
+          color="#36524E"
+          bindchange="directory"
+        />
+      </view>
+      <view class="divider" />
+      <view class="row spread">
+        <view class="grow">允许其他成员查看电话</view>
+        <switch
+          checked="{{profile.phoneVisible}}"
+          disabled="{{saving || !canEdit || !profile.directoryVisible}}"
+          color="#36524E"
+          bindchange="phone"
+        />
+      </view>
+      <view class="muted small">公开电话需同时公开名录资料。</view>
+    </view>
+    <view class="error">{{submitError}}</view>
+    <button wx:if="{{canEdit}}" bindtap="save" loading="{{saving}}" disabled="{{saving}}">
+      保存资料与隐私设置
+    </button>
+  </block>
+  <view wx:elif="{{!loading && !error}}" class="empty">审核通过后可管理成员资料与隐私。</view>
+</view>

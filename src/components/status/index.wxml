@@ -1,0 +1,6 @@
+<view wx:if="{{loading}}" class="empty" role="status">正在加载…</view>
+<view wx:elif="{{error}}" class="card">
+  <view class="error">{{error}}</view>
+  <button class="secondary" bindtap="retry">重试</button>
+</view>
+<view wx:elif="{{empty}}" class="empty">{{emptyText}}</view>

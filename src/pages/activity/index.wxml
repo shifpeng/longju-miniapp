@@ -1,0 +1,135 @@
+<custom-nav title="{{activity && activity.lifecycle === 'ENDED' ? '活动回顾' : '活动详情'}}" back />
+<view class="page activity-detail-page">
+  <load-status loading="{{loading}}" error="{{error}}" bind:retry="load" />
+  <block wx:if="{{activity}}">
+    <image wx:if="{{cover}}" class="cover" src="{{cover}}" mode="aspectFill" />
+    <text class="badge">{{view.statusText}}</text>
+    <view class="title">{{activity.title}}</view>
+    <view class="card">
+      <view>{{view.date}}</view>
+      <view>{{activity.place}}</view>
+      <view wx:if="{{activity.lifecycle !== 'ENDED' && activity.lifecycle !== 'CANCELLED'}}">
+        余位 {{activity.remainingCount}} 人
+      </view>
+      <view class="muted">组织者：社群活动组</view>
+    </view>
+    <view class="section">活动介绍</view>
+    <view class="body activity-intro">{{activity.intro}}</view>
+    <view class="section">报名前，请先看看</view>
+    <view class="muted">报名截止：{{signupClose}}</view>
+    <view class="muted">取消截止：{{cancelClose}}</view>
+    <view class="muted">参加人数 = 本人 1 人 + 同行人数。实际可带人数与余位以提交时校验为准。</view>
+    <view wx:if="{{activity.myRegistration}}" class="card">
+      <view>你曾报名此活动</view>
+      <button class="secondary" bindtap="registration">查看我的报名</button>
+    </view>
+    <block wx:if="{{activity.lifecycle === 'ENDED'}}">
+      <view class="section">活动回顾</view>
+      <view wx:if="{{recap.state === 'PREPARING'}}" class="muted">精彩回顾整理中</view>
+      <block wx:if="{{recap.state === 'PUBLISHED'}}">
+        <view class="title">{{recap.title || activity.title}}</view>
+        <rich-text wx:if="{{recap.body}}" nodes="{{recap.body}}" />
+        <view wx:if="{{recap.photoCount}}" class="muted">共 {{recap.photoCount}} 张照片</view>
+        <view class="photo-grid">
+          <view wx:for="{{photos}}" wx:key="url">
+            <image
+              src="{{item.url}}"
+              mode="aspectFill"
+              data-index="{{index}}"
+              bindtap="showPhotos"
+            />
+            <view wx:if="{{item.caption}}" class="small">{{item.caption}}</view>
+          </view>
+        </view>
+        <button
+          wx:if="{{recap.photoCount && loggedIn}}"
+          class="secondary"
+          data-index="0"
+          bindtap="showPhotos"
+        >
+          查看完整相册
+        </button>
+      </block>
+      <button class="secondary" bindtap="more">更多活动</button>
+    </block>
+    <view wx:if="{{!loggedIn}}" class="card">
+      <view class="muted">登录后查看活动照片与个人报名状态</view>
+      <button bindtap="signIn">微信登录</button>
+    </view>
+    <load-status error="{{mediaError}}" bind:retry="loadMedia" />
+    <view wx:if="{{canRegister}}" id="registration-form" class="card">
+      <view class="section">确认报名信息</view>
+      <view class="field">
+        <text class="label">联系人</text>
+        <input
+          value="{{name}}"
+          data-field="name"
+          bindinput="input"
+          maxlength="40"
+          disabled="{{saving}}"
+        />
+      </view>
+      <view class="field">
+        <text class="label">联系电话</text>
+        <input
+          value="{{phone}}"
+          data-field="phone"
+          bindinput="input"
+          maxlength="14"
+          disabled="{{saving}}"
+        />
+      </view>
+      <picker
+        range="{{choices}}"
+        value="{{companionCount}}"
+        bindchange="count"
+        disabled="{{saving}}"
+      >
+        <view class="picker">{{choices[companionCount]}}</view>
+      </picker>
+      <view class="error">{{submitError}}</view>
+      <button bindtap="submit" disabled="{{saving}}" loading="{{saving}}">
+        确认报名 · {{companionCount + 1}} 人
+      </button>
+    </view>
+    <view wx:if="{{submitError && !canRegister}}" class="card">
+      <view class="error">{{submitError}}</view>
+      <button class="secondary" bindtap="load">刷新并重新确认</button>
+    </view>
+    <button
+      wx:if="{{loggedIn && !canRegister && !activity.myRegistration && activity.lifecycle === 'UPCOMING' && activity.signupWindow === 'OPEN' && !activity.isFull}}"
+      class="secondary"
+      bindtap="apply"
+    >
+      查看申请与成员资格
+    </button>
+    <view class="activity-sticky">
+      <block wx:if="{{activity.lifecycle === 'ENDED'}}">
+        <button
+          wx:if="{{recap.photoCount && loggedIn}}"
+          class="activity-footer-primary"
+          data-index="0"
+          bindtap="showPhotos"
+        >
+          查看相册
+        </button>
+        <view wx:elif="{{recap.state === 'PREPARING'}}" class="activity-footer-note">
+          精彩回顾整理中
+        </view>
+        <button class="secondary activity-footer-secondary" bindtap="more">更多活动</button>
+      </block>
+      <block wx:elif="{{canRegister}}">
+        <view class="activity-footer-note">
+          余位 {{activity.remainingCount}} 人 · 报名无需在线支付
+        </view>
+        <button class="activity-footer-primary" bindtap="scrollToSignup">报名参加</button>
+      </block>
+      <block
+        wx:elif="{{!loggedIn && activity.lifecycle === 'UPCOMING' && activity.signupWindow === 'OPEN' && !activity.isFull}}"
+      >
+        <view class="activity-footer-note">登录后查看报名资格</view>
+        <button class="activity-footer-primary" bindtap="signIn">微信登录后报名</button>
+      </block>
+    </view>
+  </block>
+</view>

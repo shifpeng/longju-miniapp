@@ -1,0 +1,60 @@
+<custom-nav title="老乡录" />
+<view class="page members-page">
+  <view class="title">联络同乡</view>
+  <view class="muted">按姓名搜索，找到同路的人。</view>
+  <view wx:if="{{checked && !permitted}}" class="card">
+    <view class="section">加入后，与老乡相识</view>
+    <view class="muted">成员名录仅向当前已审核通过的社群成员开放。</view>
+    <button bindtap="apply">查看申请与资格</button>
+  </view>
+  <block wx:if="{{permitted}}">
+    <view class="row field members-search">
+      <input
+        class="grow"
+        value="{{q}}"
+        bindinput="input"
+        bindconfirm="search"
+        confirm-type="search"
+        maxlength="40"
+        placeholder="搜索老乡姓名"
+      />
+      <button class="link" bindtap="search">搜索</button>
+    </view>
+    <view class="muted">找到 {{total}} 位老乡</view>
+    <view
+      wx:for="{{items}}"
+      wx:key="id"
+      class="card member-result"
+      data-id="{{item.id}}"
+      bindtap="open"
+    >
+      <view class="member-result-main">
+        <view class="avatar">{{item.initial}}</view>
+        <view class="member-result-copy">
+          <view class="member-result-name">{{item.name}}</view>
+          <view class="muted member-result-meta">
+            {{item.hometownLabel}} · {{item.residenceLabel}}
+          </view>
+        </view>
+        <view class="member-chevron" />
+      </view>
+      <view class="member-result-tags"><text class="badge">{{item.industryLabel}}</text></view>
+      <view class="muted member-result-intro">{{item.introduction || '这位老乡暂未填写介绍'}}</view>
+    </view>
+    <view class="muted small">仅展示成员允许公开的资料，联系方式默认隐藏。</view>
+  </block>
+  <load-status
+    loading="{{loading}}"
+    error="{{error}}"
+    empty="{{permitted && !items.length}}"
+    empty-text="没有找到相关老乡，试试其他姓名"
+    bind:retry="retry"
+  />
+  <button
+    wx:if="{{permitted && items.length < total && !loading}}"
+    class="secondary"
+    bindtap="retry"
+  >
+    加载更多
+  </button>
+</view>

@@ -1,0 +1,55 @@
+<custom-nav title="申请加入" back />
+<view class="page application-page">
+  <view class="title">{{statusTitle}}</view>
+  <view class="muted body">{{detail}}</view>
+  <view wx:if="{{canSubmit}}" class="application-progress">
+    <view class="application-step application-step-current"><view>1 · 填写资料</view></view>
+    <view class="application-step"><view>2 · 等待审核</view></view>
+    <view class="application-step"><view>3 · 相聚</view></view>
+  </view>
+  <load-status loading="{{loading}}" error="{{error}}" bind:retry="load" />
+  <view wx:if="{{application && !canSubmit}}" class="card">
+    <view>申请人：{{application.submittedProfile.name}}</view>
+    <view>联系电话：{{application.submittedProfile.phone}}</view>
+    <view class="muted">审核结果以当前页面为准</view>
+    <button class="secondary" bindtap="load">刷新申请状态</button>
+  </view>
+  <block wx:if="{{canSubmit}}">
+    <profile-form value="{{profile}}" disabled="{{saving}}" bind:change="change" />
+    <view class="muted">电话默认不向其他成员公开，仅供审核及已报名活动的组织联系。</view>
+    <button wx:if="{{agreementReady}}" class="link" bindtap="agreement">
+      阅读加入须知与隐私说明
+    </button>
+    <view wx:if="{{!agreementReady}}" class="muted">加入须知暂未发布，可直接提交申请。</view>
+    <view class="error">{{submitError}}</view>
+  </block>
+  <button wx:if="{{submitError && !canSubmit}}" class="secondary" bindtap="load">
+    刷新状态并核对
+  </button>
+  <view wx:if="{{!canSubmit}}" class="error">{{submitError}}</view>
+  <view wx:if="{{canSubmit}}" class="application-sticky">
+    <checkbox-group wx:if="{{agreementReady}}" bindchange="agree">
+      <label class="application-consent">
+        <checkbox
+          value="yes"
+          checked="{{accepted}}"
+          disabled="{{saving || !agreementReady}}"
+          color="#68481D"
+        />
+        <text>我已阅读并同意加入须知与隐私说明</text>
+      </label>
+    </checkbox-group>
+    <view wx:if="{{!agreementReady}}" class="application-agreement-note">
+      加入须知暂未发布，可直接提交申请。
+    </view>
+    <view wx:if="{{submitError}}" class="error">{{submitError}}</view>
+    <button
+      class="application-submit"
+      bindtap="submit"
+      loading="{{saving}}"
+      disabled="{{saving || (agreementReady && !accepted)}}"
+    >
+      提交申请
+    </button>
+  </view>
+</view>

@@ -1,0 +1,96 @@
+.mine-page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.mine-membership {
+  margin: 0;
+  padding: 18px;
+  border-radius: 18px;
+  background:
+    radial-gradient(
+      ellipse at 105% 112%,
+      transparent 0 39%,
+      #c8a45320 39.3% 39.6%,
+      transparent 40% 43%,
+      #c8a45316 43.3% 43.6%,
+      transparent 44%
+    ),
+    linear-gradient(125deg, #292926, #181c1c);
+  color: #f0e4ce;
+}
+.mine-brand-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.mine-brand {
+  color: #cfb98f;
+  font-size: 12px;
+  line-height: 18px;
+}
+.mine-status {
+  color: #cbc2b1;
+  font-size: 11px;
+  line-height: 16px;
+}
+.mine-identity {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 14px;
+}
+.mine-avatar {
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  background: #343831;
+  color: #cfb98f;
+  font-size: 18px;
+}
+.mine-copy {
+  flex: 1;
+  min-width: 0;
+}
+.mine-name {
+  font-size: 18px;
+  line-height: 26px;
+  color: #f0e4ce;
+}
+.mine-detail {
+  color: #cbc2b1;
+  font-size: 12px;
+  line-height: 20px;
+}
+.mine-membership button {
+  width: 100%;
+}
+.mine-menu {
+  margin: 0;
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+.mine-menu-row {
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #e0d8c8;
+  font-size: 14px;
+}
+.mine-menu-row:last-child {
+  border-bottom: 0;
+}
+.mine-chevron {
+  width: 7px;
+  height: 7px;
+  margin-right: 4px;
+  border-top: 1.5px solid #504c43;
+  border-right: 1.5px solid #504c43;
+  transform: rotate(45deg);
+}

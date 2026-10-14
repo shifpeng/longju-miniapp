@@ -1,0 +1,59 @@
+<custom-nav title="我的" />
+<view class="page mine-page">
+  <view class="card ink mine-membership">
+    <view class="mine-brand-row">
+      <view class="mine-brand">西引力.陇聚</view>
+      <view wx:if="{{me}}" class="mine-status">{{qualificationLabel}}</view>
+    </view>
+    <view class="mine-identity">
+      <view class="mine-avatar">{{identityInitial}}</view>
+      <view class="mine-copy">
+        <view class="mine-name">{{identityName}}</view>
+        <view class="mine-detail">{{card.detail}}</view>
+      </view>
+    </view>
+    <button wx:if="{{!loggedIn}}" bindtap="signIn" loading="{{loading}}" disabled="{{loading}}">
+      微信登录
+    </button>
+    <button
+      wx:else
+      class="secondary"
+      data-page="{{me && me.qualification === 'ACTIVE' ? 'profile' : 'application'}}"
+      bindtap="open"
+    >
+      {{card.action}}
+    </button>
+  </view>
+  <load-status loading="{{loading}}" error="{{error}}" bind:retry="load" />
+  <view class="card mine-menu">
+    <view class="mine-menu-row" data-page="registrations" bindtap="open">
+      <view>我的报名</view>
+      <view class="mine-chevron" />
+    </view>
+    <view class="mine-menu-row" data-page="profile" bindtap="open">
+      <view>我的资料与隐私</view>
+      <view class="mine-chevron" />
+    </view>
+    <view class="mine-menu-row" data-page="feedback" bindtap="open">
+      <view>帮助与反馈</view>
+      <view class="mine-chevron" />
+    </view>
+    <view class="mine-menu-row" data-page="agreement" bindtap="open">
+      <view>加入须知与隐私说明</view>
+      <view class="mine-chevron" />
+    </view>
+    <view wx:if="{{loggedIn}}" class="mine-menu-row" data-page="account" bindtap="open">
+      <view>账号与成员资格</view>
+      <view class="mine-chevron" />
+    </view>
+    <view class="mine-menu-row" data-page="about" bindtap="open">
+      <view>关于西引力.陇聚</view>
+      <view class="mine-chevron" />
+    </view>
+  </view>
+  <button wx:if="{{loggedIn}}" class="secondary" bindtap="signOut">退出登录</button>
+  <view class="empty small">
+    西引力.陇聚
+    <view>让乡情在这座城继续</view>
+  </view>
+</view>

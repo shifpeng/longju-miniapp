@@ -1,0 +1,36 @@
+<custom-nav title="报名详情" back />
+<view class="page">
+  <load-status loading="{{loading}}" error="{{error}}" bind:retry="load" />
+  <block wx:if="{{registration}}">
+    <text class="badge">{{label}}</text>
+    <view class="title">{{activity.title || '我的报名'}}</view>
+    <view class="card">
+      <view>本人 1 人 + 同行 {{registration.companionCount}} 人</view>
+      <view>合计 {{registration.participantCount}} 人</view>
+      <view class="muted">报名时间：{{date}}</view>
+      <view wx:if="{{activity}}" class="muted">{{activity.place}}</view>
+      <button class="secondary" bindtap="activity">查看活动详情</button>
+    </view>
+    <view wx:if="{{registration.checkin}}" class="card success">
+      已签到 {{registration.checkin.participantCount}} 人
+    </view>
+    <view wx:if="{{canCheckin}}" class="card">
+      <view class="section">向现场工作人员出示签到码</view>
+      <image wx:if="{{qrUrl}}" class="qr" src="{{qrUrl}}" mode="aspectFit" />
+      <view wx:if="{{qrUrl}}" class="muted">{{seconds}} 秒后失效，请勿转发或截图保存。</view>
+      <view wx:else class="muted">生成签到码后在有效期内出示。</view>
+      <button bindtap="checkin" disabled="{{saving || refreshSeconds > 0}}" loading="{{saving}}">
+        {{refreshSeconds > 0 ? refreshSeconds + ' 秒后可刷新' : '生成 / 刷新签到码'}}
+      </button>
+      <button class="link" bindtap="load">刷新签到结果</button>
+    </view>
+    <view wx:elif="{{registration.status === 'ACTIVE' && !registration.checkin}}" class="muted">
+      当前无法生成签到码，请在签到开放期间刷新状态。
+    </view>
+    <view class="error">{{actionError}}</view>
+    <button wx:if="{{canCancel}}" class="secondary" bindtap="cancel" disabled="{{saving}}">
+      取消 {{registration.participantCount}} 人报名
+    </button>
+    <button class="link" bindtap="load">刷新报名状态</button>
+  </block>
+</view>

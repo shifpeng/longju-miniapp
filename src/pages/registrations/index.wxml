@@ -1,0 +1,21 @@
+<custom-nav title="我的报名" back />
+<view class="page">
+  <view class="title">我的报名</view>
+  <view class="card" wx:for="{{items}}" wx:key="id" data-id="{{item.id}}" bindtap="open">
+    <text class="badge">{{item.label}}</text>
+    <view class="section">{{item.title}}</view>
+    <view>本人 1 人 + 同行 {{item.companionCount}} 人</view>
+    <view class="muted">报名时间：{{item.date}}</view>
+    <view class="link">查看报名详情 ›</view>
+  </view>
+  <load-status
+    loading="{{loading}}"
+    error="{{error}}"
+    empty="{{!items.length}}"
+    empty-text="暂无报名记录"
+    bind:retry="retry"
+  />
+  <button wx:if="{{items.length < total && !loading}}" class="secondary" bindtap="retry">
+    加载更多
+  </button>
+</view>

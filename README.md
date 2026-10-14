@@ -1,17 +1,19 @@
 # 西引力.陇聚 · 微信小程序
 
-独立微信小程序仓库，使用原生小程序 + TypeScript。
+原生微信小程序 + TypeScript，独立依赖与构建。接口前缀 `/api/v1/app`，成员资格、权限、人数与签到状态以服务端为准。开发与交接入口：[docs/START-HERE.md](docs/START-HERE.md)。
 
-一期负责首页、申请加入、审核结果、老乡录、活动与报名、签到码、个人资料和隐私、公告与活动回顾、帮助反馈。商城留在二期。
+```sh
+npm ci
+npm run dev
+```
 
-[已确认的 Figma 设计](https://www.figma.com/design/dXJ5cqGqcDS4AozgWve5qv)
+在微信开发者工具导入本仓库目录，`project.config.json` 指向构建产物 `dist/`。当前 AppID 为游客模式；真实登录需使用与后端一致的小程序 AppID，AppSecret 只配置在后端。
 
-业务接口由 `longju-api` 提供，使用 `/api/v1/app`。接口契约由后端发布，本仓库按固定契约版本维护类型与调用；成员资格、权限、人数和签到状态均以服务端结果为准。
+- `npm run check`：类型检查、构建和行为测试。
+- `npm run check:native`：调用本机微信开发者工具 WXML/WXSS 编译器。
+- `npm run smoke:api`：对本机后端执行匿名只读冒烟检查。
+- `npm run build`：生成可导入开发者工具的代码包，不发布、不上传。
 
-计划使用 Node.js 22（至少 22.12）和独立 npm 依赖/锁文件。微信本地私有配置不进入版本控制，AppSecret 只放服务端。
+服务地址与正式协议配置在 `src/config/runtime.ts`。默认连接 `http://127.0.0.1:8080`，只供开发；生产环境拒绝 HTTP。正式协议尚未提供时禁止提交申请，不把设计示例当作真实协议。
 
-当前仅完成仓库初始化和职责说明；尚未建立小程序应用工程或安装依赖，等待用户决定开始编码。
-
-## 新会话开发入口
-
-先读 [AGENTS.md](AGENTS.md) 和 [开发交接](docs/START-HERE.md)，再按 [UI与素材入口](docs/UI-REFERENCE.md) 查看已确认设计。当前资料已保存，后续收到开发指令即可按阶段开始。
+[已确认的 Figma 设计](https://www.figma.com/design/dXJ5cqGqcDS4AozgWve5qv) · [UI与素材入口](docs/UI-REFERENCE.md)

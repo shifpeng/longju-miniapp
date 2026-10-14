@@ -1,0 +1,79 @@
+.members-page {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.members-page > .title {
+  margin: 0;
+}
+.members-page > .muted:first-of-type {
+  margin-top: -12px;
+}
+.members-search {
+  margin: 0;
+  gap: 8px;
+}
+.members-search input {
+  margin: 0;
+  min-height: 50px;
+}
+.members-search button {
+  width: auto;
+  min-width: 60px;
+  min-height: 44px;
+  margin: 0;
+  padding: 8px 12px;
+  background: transparent;
+  color: #36524e;
+  font-size: 12px;
+}
+.member-result {
+  margin: 0;
+  padding: 20px;
+}
+.member-result-main {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.member-result .avatar {
+  flex: 0 0 50px;
+}
+.member-result-copy {
+  flex: 1;
+  min-width: 0;
+}
+.member-result-name {
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+.member-result-meta {
+  margin-top: 4px;
+  font-size: 12px;
+  line-height: 20px;
+}
+.member-result-tags {
+  margin-top: 16px;
+}
+.member-result-tags .badge {
+  max-width: 100%;
+  line-height: 20px;
+  overflow-wrap: anywhere;
+}
+.member-result-intro {
+  margin-top: 12px;
+  font-size: 14px;
+  line-height: 24px;
+  overflow-wrap: anywhere;
+}
+.member-chevron {
+  flex-shrink: 0;
+  width: 7px;
+  height: 7px;
+  margin-right: 4px;
+  border-top: 1.5px solid #504c43;
+  border-right: 1.5px solid #504c43;
+  transform: rotate(45deg);
+}

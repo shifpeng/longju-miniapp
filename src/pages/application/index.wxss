@@ -1,0 +1,61 @@
+.application-page {
+  padding-bottom: calc(160px + env(safe-area-inset-bottom));
+}
+.application-page > .title {
+  margin-bottom: 4px;
+}
+.application-page > .muted.body {
+  font-size: 14px;
+  line-height: 22px;
+}
+.application-progress {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow: hidden;
+  color: #504c43;
+  font-size: 12px;
+  line-height: 20px;
+  white-space: nowrap;
+}
+.application-step {
+  flex: 1;
+  min-width: 0;
+}
+.application-step-current {
+  color: #36524e;
+}
+.application-sticky {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 4;
+  padding: 10px 20px calc(10px + env(safe-area-inset-bottom));
+  background: #fffcf5;
+  box-shadow: 0 -4px 20px #2927200d;
+}
+.application-consent {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 28px;
+  color: #504c43;
+  font-size: 12px;
+  line-height: 18px;
+}
+.application-consent checkbox {
+  transform: scale(0.85);
+  transform-origin: left center;
+}
+.application-agreement-note {
+  color: #504c43;
+  font-size: 12px;
+  line-height: 18px;
+}
+button.application-submit {
+  width: 100%;
+  margin-top: 8px;
+  min-height: 46px;
+  font-size: 14px;
+}

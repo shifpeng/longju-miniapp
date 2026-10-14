@@ -1,0 +1,61 @@
+<load-status loading="{{loading}}" error="{{error}}" bind:retry="load" />
+<view class="field">
+  <text class="label">姓名 *</text>
+  <input
+    value="{{value.name}}"
+    data-field="name"
+    bindinput="input"
+    disabled="{{disabled}}"
+    maxlength="40"
+    placeholder="请填写真实姓名"
+  />
+</view>
+<view class="field">
+  <text class="label">联系电话 *</text>
+  <input
+    value="{{value.phone}}"
+    data-field="phone"
+    bindinput="input"
+    disabled="{{disabled || !phoneEditable}}"
+    maxlength="14"
+    type="text"
+    placeholder="请输入手机号"
+  />
+</view>
+<view class="field">
+  <text class="label">家乡 *</text>
+  <picker disabled="{{disabled}}" range="{{cities}}" range-key="name" bindchange="city">
+    <view class="picker">{{cityName}}</view>
+  </picker>
+  <picker
+    disabled="{{disabled || !counties.length}}"
+    range="{{counties}}"
+    range-key="name"
+    bindchange="county"
+  >
+    <view class="picker">{{countyName}}</view>
+  </picker>
+</view>
+<view class="field">
+  <text class="label">现居西安区域 *</text>
+  <picker disabled="{{disabled}}" range="{{residences}}" range-key="name" bindchange="residence">
+    <view class="picker">{{residenceName}}</view>
+  </picker>
+</view>
+<view class="field">
+  <text class="label">行业 *</text>
+  <picker disabled="{{disabled}}" range="{{industries}}" range-key="name" bindchange="industry">
+    <view class="picker">{{industryName}}</view>
+  </picker>
+</view>
+<view class="field">
+  <text class="label">一句话介绍（选填）</text>
+  <textarea
+    value="{{value.introduction}}"
+    data-field="introduction"
+    bindinput="input"
+    disabled="{{disabled}}"
+    maxlength="300"
+    placeholder="说说你的兴趣或擅长的事"
+  />
+</view>

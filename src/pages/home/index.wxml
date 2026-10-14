@@ -1,0 +1,132 @@
+<custom-nav title="西引力.陇聚" />
+<view class="page home-page">
+  <image class="home-backdrop" src="/assets/caravan.jpg" mode="scaleToFill" aria-hidden="true" />
+  <view class="home-intro">
+    <view class="home-location">
+      <view class="location-pin" />
+      西安 · 甘肃老乡社群
+    </view>
+    <view class="home-welcome">
+      相聚长安
+      <view>共叙陇情</view>
+    </view>
+  </view>
+  <load-status
+    wx:if="{{(!loaded && loading) || error}}"
+    loading="{{!loaded && loading}}"
+    error="{{error}}"
+    bind:retry="load"
+  />
+  <view wx:if="{{announcements.length}}" class="notice home-notice">
+    <view class="home-notice-icon" aria-hidden="true" />
+    <text class="home-notice-label">公告</text>
+    <view class="home-notice-divider" />
+    <swiper
+      class="home-notice-swiper"
+      vertical
+      autoplay="{{announcements.length > 1}}"
+      circular
+      interval="5000"
+      duration="350"
+    >
+      <swiper-item wx:for="{{announcements}}" wx:key="id">
+        <view class="home-notice-title" data-id="{{item.id}}" bindtap="notice">{{item.title}}</view>
+      </swiper-item>
+    </swiper>
+    <view class="home-notice-chevron" aria-hidden="true" />
+  </view>
+  <view wx:if="{{me.qualification === 'ACTIVE'}}" class="home-member-welcome">
+    <view class="home-member-greeting">{{me.profile.name || '老乡'}}，欢迎回家</view>
+    <view wx:if="{{!loaded && loading}}" class="home-member-hint">正在查看你的相聚安排…</view>
+    <view wx:elif="{{registrationError}}" class="home-member-hint">
+      <view>相聚安排暂时未能读取</view>
+      <button class="home-member-retry" bindtap="load">重新加载</button>
+    </view>
+    <view wx:elif="{{nextGathering}}" class="home-next-gathering">
+      <view class="home-member-hint">我的下一场相聚</view>
+      <view class="home-next-title">{{nextGathering.title}}</view>
+      <view class="home-member-hint">{{nextGathering.date}} · {{nextGathering.place}}</view>
+      <button class="home-registration" bindtap="openRegistration">查看报名</button>
+    </view>
+    <view wx:elif="{{carouselError}}" class="home-member-hint">
+      <view>往期相聚照片暂时未能读取</view>
+      <button class="home-member-retry" bindtap="load">重新加载</button>
+    </view>
+    <view wx:elif="{{carousel.length}}" class="home-carousel">
+      <view class="home-member-hint">往期相聚 · 美好瞬间</view>
+      <swiper
+        class="home-photo-swiper"
+        current="{{carouselIndex}}"
+        bindchange="carouselChange"
+        autoplay="{{carousel.length > 1}}"
+        circular="{{carousel.length > 1}}"
+        indicator-dots="{{carousel.length > 1}}"
+        indicator-color="#ffffff66"
+        indicator-active-color="#ffffff"
+        interval="5000"
+        duration="350"
+      >
+        <swiper-item wx:for="{{carousel}}" wx:key="key">
+          <view
+            class="home-photo-slide"
+            data-id="{{item.activityId}}"
+            bindtap="openRecap"
+            aria-role="button"
+            aria-label="{{item.activityTitle}}，查看活动回顾"
+          >
+            <image
+              wx:if="{{carouselRequested[index] && !carouselFailed[item.key]}}"
+              class="home-photo"
+              data-index="{{index}}"
+              data-key="{{item.key}}"
+              bindload="carouselImageLoad"
+              src="{{item.url}}"
+              mode="aspectFill"
+              binderror="carouselImageError"
+            />
+            <view wx:if="{{carouselFailed[item.key]}}" class="home-photo-error">
+              <view>这张照片暂时未能加载</view>
+              <button
+                data-key="{{item.key}}"
+                catchtap="retryCarouselImage"
+                loading="{{carouselRetrying[item.key]}}"
+                disabled="{{carouselRetrying[item.key]}}"
+              >
+                重试这张
+              </button>
+            </view>
+            <view class="home-photo-caption">{{item.caption || item.activityTitle}}</view>
+          </view>
+        </swiper-item>
+      </swiper>
+      <view wx:if="{{carouselRenewError}}" class="home-member-hint">{{carouselRenewError}}</view>
+    </view>
+  </view>
+  <view wx:elif="{{loaded}}" class="home-membership">
+    <image class="home-monument" src="/assets/mogao.png" mode="widthFix" aria-hidden="true" />
+    <view class="home-membership-copy">
+      <view class="home-membership-title">{{card.title}}</view>
+      <view class="home-membership-detail">{{card.detail}}</view>
+    </view>
+    <button class="home-apply" bindtap="apply">
+      <image
+        class="home-button-grain"
+        src="/assets/sand-grain.png"
+        mode="scaleToFill"
+        aria-hidden="true"
+      />
+      <text>{{card.action}}</text>
+    </button>
+  </view>
+  <view class="home-section">
+    <view class="home-section-title">近期相聚</view>
+    <button class="home-all-events" bindtap="events">
+      全部活动
+      <view class="home-chevron" />
+    </button>
+  </view>
+  <activity-card wx:for="{{activities}}" wx:key="id" item="{{item}}" compact="{{true}}" />
+  <view wx:if="{{activitiesLoaded && !error && !activities.length}}" class="home-empty">
+    暂时没有近期活动
+  </view>
+</view>

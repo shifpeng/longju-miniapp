@@ -1,0 +1,39 @@
+.activity-list-page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.activity-list-page .filters {
+  gap: 8px;
+  flex-wrap: nowrap;
+}
+.activity-list-page .filters button {
+  flex: 1;
+  min-width: 0;
+  min-height: 40px;
+  margin: 0;
+  padding: 8px 6px;
+  border-radius: 12px;
+  font-size: 12px;
+  line-height: 20px;
+}
+.activity-list-page .filters button:not(.secondary) {
+  background: #e4e5d8;
+  color: #36524e;
+}
+.activity-list-page .filters button.secondary {
+  background: #fffcf5;
+}
+.activity-list-page > .title {
+  margin: 0;
+}
+.activity-list-page > .muted {
+  margin-top: -16px;
+  font-size: 14px;
+}
+.activity-list-page > activity-card {
+  display: block;
+}
+.activity-list-page load-status {
+  display: block;
+}

@@ -1,0 +1,65 @@
+<custom-nav title="帮助与反馈" back />
+<view class="page">
+  <view class="title">帮助与反馈</view>
+  <view class="card">
+    <view>申请多久会收到审核结果？</view>
+    <view class="muted">请在申请资料页查看当前进度，退回时会显示需补充的内容。</view>
+    <view class="divider" />
+    <view>如何取消报名或签到？</view>
+    <view class="muted">
+      进入「我的报名」查看详情，在允许取消的时间内操作；签到开放后可出示签到码。
+    </view>
+  </view>
+  <view wx:if="{{!loggedIn}}" class="card">
+    <view>登录后可提交反馈并查看回复。</view>
+    <button bindtap="signIn">微信登录</button>
+  </view>
+  <block wx:else>
+    <picker range="{{types}}" value="{{typeIndex}}" bindchange="type" disabled="{{saving}}">
+      <view class="picker">{{types[typeIndex]}}</view>
+    </picker>
+    <view class="field">
+      <textarea
+        value="{{body}}"
+        bindinput="input"
+        disabled="{{saving}}"
+        maxlength="2000"
+        placeholder="请描述你的建议或遇到的问题（最多 2000 字）"
+      />
+    </view>
+    <view class="row spread">
+      <text class="grow">允许运营组通过我的联系电话联系我</text>
+      <switch
+        checked="{{contactConsent}}"
+        bindchange="consent"
+        disabled="{{saving}}"
+        color="#36524E"
+      />
+    </view>
+    <view class="error">{{submitError}}</view>
+    <button bindtap="submit" loading="{{saving}}" disabled="{{saving}}">提交反馈</button>
+    <view class="section">我的反馈</view>
+    <view wx:for="{{items}}" wx:key="id" class="card">
+      <text class="badge">
+        {{item.status === 'OPEN' ? '待处理' : item.status === 'PROCESSING' ? '处理中' : item.status
+        === 'RESOLVED' ? '已回复' : '已关闭'}}
+      </text>
+      <view class="body">{{item.body}}</view>
+      <view wx:if="{{item.publicReply}}">
+        <view class="divider" />
+        <view>社群运营组回复</view>
+        <view class="body muted">{{item.publicReply}}</view>
+      </view>
+    </view>
+    <load-status
+      loading="{{loading}}"
+      error="{{error}}"
+      empty="{{!items.length}}"
+      empty-text="暂无反馈记录"
+      bind:retry="retry"
+    />
+    <button wx:if="{{items.length < total && !loading}}" class="secondary" bindtap="retry">
+      加载更多
+    </button>
+  </block>
+</view>

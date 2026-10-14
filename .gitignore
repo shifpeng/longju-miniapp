@@ -1,0 +1,16 @@
+.DS_Store
+node_modules/
+miniprogram_npm/
+dist/
+coverage/
+*.log
+.env
+.env.*
+!.env.example
+project.private.config.json
+.idea/
+
+# 本仓必须保存独立依赖清单，覆盖本机全局忽略规则。
+!package.json
+!package-lock.json
+artifacts/

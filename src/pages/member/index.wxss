@@ -1,0 +1,50 @@
+.member-detail {
+  margin: 0;
+  padding: 24px 20px;
+  overflow-wrap: anywhere;
+}
+.member-detail-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.member-detail-header .avatar {
+  flex: 0 0 50px;
+}
+.member-detail-identity {
+  flex: 1;
+  min-width: 0;
+}
+.member-detail .title {
+  margin: 0;
+}
+.member-detail-meta {
+  margin-top: 10px;
+  line-height: 24px;
+}
+.member-detail-tags {
+  margin-top: 16px;
+}
+.member-detail-tags .badge {
+  max-width: 100%;
+  line-height: 20px;
+}
+.member-detail-intro {
+  margin-top: 20px;
+}
+.member-detail .body {
+  font-size: 15px;
+  line-height: 28px;
+}
+.member-detail-help {
+  margin-top: 28px;
+}
+.member-detail-help .section {
+  margin: 0 0 12px;
+}
+.member-detail-contact {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid #e0d8c8;
+  line-height: 24px;
+}

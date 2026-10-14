@@ -1,0 +1,307 @@
+.home-page {
+  position: relative;
+  padding: 20px 20px calc(80px + env(safe-area-inset-bottom));
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.home-backdrop {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+.home-intro,
+.home-page > load-status,
+.home-page > activity-card,
+.home-notice,
+.home-membership,
+.home-member-welcome,
+.home-section,
+.home-empty {
+  position: relative;
+  z-index: 1;
+}
+.home-location {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #504c43;
+  font-size: 12px;
+  line-height: 20px;
+}
+/* 原稿 artwork.js 的 pin 路径，24px viewBox，按首页设计显示为16px。 */
+.location-pin {
+  flex: 0 0 16px;
+  width: 16px;
+  height: 16px;
+  background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiMzNjUyNEUiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwYXRoIGQ9Ik0xOSAxMGMwIDUtNyAxMS03IDExUzUgMTUgNSAxMGE3IDcgMCAwIDEgMTQgMFoiLz48Y2lyY2xlIGN4PSIxMiIgY3k9IjEwIiByPSIyIi8+PC9zdmc+')
+    center / 16px 16px no-repeat;
+}
+.home-welcome {
+  margin-top: 10px;
+  font-family: 'Noto Serif SC', 'Songti SC', 'STSong', serif;
+  font-size: 25px;
+  font-weight: 500;
+  line-height: 34px;
+  letter-spacing: 0.075em;
+}
+.home-notice {
+  margin: 0;
+  flex: none;
+  font-size: 12px;
+  padding: 0 12px;
+  gap: 8px;
+}
+.home-notice-icon {
+  flex: 0 0 16px;
+  width: 16px;
+  height: 16px;
+  background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM2ODQ4MUQiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwYXRoIGQ9Ik00IDEwaDRsMTEtNXYxNEw4IDE0SDR6bTQgNGwyIDZoM2wtMi01TTIyIDl2NiIvPjwvc3ZnPg==')
+    center / 16px 16px no-repeat;
+}
+.home-notice-label {
+  flex: none;
+  color: #68481d;
+  font-size: 12px;
+  line-height: 20px;
+}
+.home-notice-divider {
+  flex: 0 0 1px;
+  width: 1px;
+  height: 12px;
+  background: #bfa77e;
+}
+.home-notice swiper {
+  min-width: 0;
+}
+.home-notice-chevron {
+  flex: 0 0 7px;
+  width: 7px;
+  height: 7px;
+  margin-right: 2px;
+  border-top: 1.5px solid #504c43;
+  border-right: 1.5px solid #504c43;
+  transform: rotate(45deg);
+}
+.home-membership {
+  position: relative;
+  padding: 20px;
+  border-radius: 18px;
+  background: linear-gradient(118deg, #faf6ee, #f0e4ce 46%, #e6d6b9 78%, #d7bc8e);
+}
+.home-monument {
+  position: absolute;
+  top: -12px;
+  right: 6px;
+  width: 36%;
+  pointer-events: none;
+}
+.home-membership-copy {
+  position: relative;
+  min-height: 96px;
+  padding-right: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+}
+.home-membership-title {
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 26px;
+  overflow-wrap: anywhere;
+}
+.home-membership-detail {
+  color: #504c43;
+  font-size: 12px;
+  line-height: 20px;
+}
+button.home-apply {
+  position: relative;
+  width: 100%;
+  min-height: 46px;
+  margin: 14px 0 0;
+  padding: 12px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 22px;
+  overflow: hidden;
+  background: linear-gradient(
+    112deg,
+    #c49b59,
+    #d9ba80 17%,
+    #e4c792 39%,
+    #cfa96b 62%,
+    #dfc18a 82%,
+    #c9a266
+  );
+  box-shadow: inset 0 -1px 0 #8a67272a;
+}
+.home-button-grain {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.home-apply text {
+  position: relative;
+}
+.home-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 44px;
+}
+.home-section-title {
+  font-size: 18px;
+  line-height: 26px;
+  font-weight: 500;
+}
+button.home-all-events {
+  flex: none;
+  width: auto;
+  min-width: 0;
+  min-height: 44px;
+  margin: 0;
+  padding: 0;
+  gap: 8px;
+  border-radius: 0;
+  background: transparent;
+  color: #36524e;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 20px;
+}
+.home-chevron {
+  width: 7px;
+  height: 7px;
+  margin-right: 4px;
+  border-top: 1.5px solid currentColor;
+  border-right: 1.5px solid currentColor;
+  transform: rotate(45deg);
+}
+.home-empty {
+  padding: 24px 12px;
+  text-align: center;
+  color: #504c43;
+  font-size: 14px;
+  line-height: 22px;
+}
+@media (max-width: 350px) {
+  .home-membership-copy {
+    padding-right: 78px;
+  }
+}
+
+.home-notice {
+  overflow: hidden;
+}
+.home-notice-swiper {
+  flex: 1;
+  min-width: 0;
+  height: 44px;
+  overflow: hidden;
+}
+.home-notice-title {
+  display: block;
+  height: 44px;
+  line-height: 44px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.home-member-welcome {
+  padding: 18px 20px;
+  border-radius: 18px;
+  background: linear-gradient(118deg, #faf6ee, #f0e4ce);
+}
+.home-member-greeting {
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 28px;
+  overflow-wrap: anywhere;
+}
+.home-member-hint {
+  margin-top: 6px;
+  font-size: 12px;
+  line-height: 20px;
+  color: #504c43;
+  overflow-wrap: anywhere;
+}
+.home-next-gathering {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid #bfa77e55;
+}
+.home-next-title {
+  margin-top: 6px;
+  font-size: 16px;
+  line-height: 24px;
+  overflow-wrap: anywhere;
+}
+button.home-registration,
+button.home-member-retry {
+  width: auto;
+  min-height: 40px;
+  margin: 10px 0 0;
+  padding: 8px 14px;
+  font-size: 13px;
+}
+
+.home-carousel {
+  margin-top: 12px;
+}
+.home-photo-swiper {
+  height: 360rpx;
+  margin-top: 10px;
+  border-radius: 12px;
+  overflow: hidden;
+}
+.home-photo-slide {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: #e8dfd0;
+}
+.home-photo {
+  width: 100%;
+  height: 100%;
+}
+.home-photo-caption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 24px 12px 28px;
+  color: #fff;
+  font-size: 14px;
+  line-height: 22px;
+  background: linear-gradient(transparent, #000a);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.home-photo-error {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 36px;
+  color: #504c43;
+  font-size: 13px;
+}
+.home-photo-error button {
+  width: auto;
+  min-height: 36px;
+  margin-top: 8px;
+  padding: 6px 16px;
+  font-size: 13px;
+}
