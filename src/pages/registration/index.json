@@ -1,1 +1,6 @@
-{ "navigationBarTitleText": "报名详情" }
+{
+  "navigationBarTitleText": "报名详情",
+  "usingComponents": {
+    "confirm-dialog": "/components/confirm-dialog/index"
+  }
+}

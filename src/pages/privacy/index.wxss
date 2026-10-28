@@ -1,0 +1,16 @@
+.privacy-page .privacy-draft {
+  border: 1px solid #d5a35e;
+}
+.privacy-page .privacy-draft .section {
+  margin-top: 0;
+  color: #8a4b2e;
+}
+.privacy-missing {
+  margin: 12px 0;
+  color: #8a4b2e;
+  line-height: 1.8;
+}
+.privacy-body {
+  white-space: pre-wrap;
+  line-height: 1.8;
+}

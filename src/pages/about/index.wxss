@@ -1,0 +1,28 @@
+.about-meaning {
+  margin-top: 8px;
+  color: #665f53;
+  font-size: 14px;
+  line-height: 24px;
+}
+.about-positioning {
+  margin-top: 16px;
+}
+.about-page .section {
+  font-size: 17px;
+  line-height: 26px;
+  overflow-wrap: anywhere;
+}
+.about-copy > .section {
+  margin-top: 24px;
+}
+.about-paragraph {
+  font-size: 15px;
+  line-height: 27px;
+  overflow-wrap: anywhere;
+}
+.about-paragraph + .about-paragraph {
+  margin-top: 12px;
+}
+.about-sources-divider {
+  margin-top: 28px;
+}

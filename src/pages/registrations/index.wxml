@@ -9,13 +9,13 @@
     <view class="link">查看报名详情 ›</view>
   </view>
   <load-status
-    loading="{{loading}}"
+    loading="{{loading && !loaded}}"
     error="{{error}}"
-    empty="{{!items.length}}"
+    empty="{{!loading && !items.length}}"
     empty-text="暂无报名记录"
     bind:retry="retry"
   />
-  <button wx:if="{{items.length < total && !loading}}" class="secondary" bindtap="retry">
+  <button wx:if="{{items.length < total && !loading}}" class="secondary" bindtap="loadMore">
     加载更多
   </button>
 </view>

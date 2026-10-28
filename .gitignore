@@ -14,3 +14,4 @@ project.private.config.json
 !package.json
 !package-lock.json
 artifacts/
+output/

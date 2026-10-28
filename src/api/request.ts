@@ -12,7 +12,7 @@ interface Envelope<T> {
   serverTime: string;
 }
 export interface RequestOptions {
-  method?: 'GET' | 'POST' | 'PATCH';
+  method?: 'GET' | 'POST' | 'PUT' | 'PATCH';
   data?: object;
   auth?: 'public' | 'optional' | 'required';
   version?: number;

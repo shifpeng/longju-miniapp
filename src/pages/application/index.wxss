@@ -4,6 +4,49 @@
 .application-page > .title {
   margin-bottom: 4px;
 }
+.application-review {
+  margin: 16px 0;
+  padding: 16px;
+  border: 1px solid #dfc59d;
+  border-left: 4px solid #a87936;
+  border-radius: 12px;
+  background: #fbf1df;
+}
+.application-review-heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #79501f;
+  font-size: 14px;
+  line-height: 22px;
+  font-weight: 600;
+}
+.application-review-mark {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #ead4b0;
+  text-align: center;
+  line-height: 22px;
+}
+.application-review-reason {
+  display: block;
+  margin-top: 12px;
+  color: #49351e;
+  font-size: 16px;
+  line-height: 26px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.application-review-hint {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid #e7d8be;
+  color: #756044;
+  font-size: 12px;
+  line-height: 20px;
+}
 .application-page > .muted.body {
   font-size: 14px;
   line-height: 22px;

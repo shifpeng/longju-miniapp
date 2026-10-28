@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "node scripts/build.mjs --watch",
     "build": "node scripts/build.mjs && node scripts/check-assets.mjs",
+    "build:release": "node scripts/build.mjs --release && node scripts/check-assets.mjs && node scripts/check-release.mjs",
     "check:assets": "node scripts/check-assets.mjs",
     "typecheck": "tsc --noEmit",
     "test": "tsx --test tests/*.test.ts",

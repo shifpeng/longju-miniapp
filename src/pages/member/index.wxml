@@ -17,12 +17,8 @@
       <view class="section">乐意交流</view>
       <view class="body">{{member.helpText}}</view>
     </view>
-    <view class="member-detail-contact">
-      <view wx:if="{{member.phone}}">
-        <view>联系电话：{{member.phone}}</view>
-        <button bindtap="call">拨打电话</button>
-      </view>
-      <view wx:else class="muted">这位老乡未公开联系方式</view>
+    <view class="member-detail-contact muted">
+      联系电话仅用于社群运营和活动联系，不向其他成员展示。
     </view>
   </view>
 </view>

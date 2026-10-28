@@ -1,6 +1,7 @@
+import { refreshPages } from '../../lib/refresh';
 import { memberLabels } from '../../lib/dictionaries';
 import { api } from '../../api/client';
-import { errorText, isLoggedIn } from '../../api/request';
+import { session, ApiError, errorText, isLoggedIn } from '../../api/request';
 import type { Member } from '../../api/types';
 import { go, selectTab } from '../../lib/view';
 Page({
@@ -19,8 +20,10 @@ Page({
     activeQuery: '',
     permitted: false,
     checked: false,
-    sequence: 0,
+    loaded: false,
   },
+  owner: '',
+  sequence: 0,
   onShow() {
     selectTab(1);
     void this.load(true);
@@ -35,48 +38,84 @@ Page({
     this.setData({ q: e.detail.value });
   },
   search() {
-    this.setData({ activeQuery: this.data.q.trim() });
+    this.setData({ activeQuery: this.data.q.trim(), items: [], page: 0, total: 0, loaded: false });
     void this.load(true);
   },
+  retryReset: true,
   retry() {
-    void this.load(this.data.page === 0);
+    void this.load(this.retryReset);
+  },
+  loadMore() {
+    void this.load(false);
   },
   async load(reset: boolean) {
     if (this.data.loading && !reset) return;
-    const seq = ++this.data.sequence;
-    this.setData({
-      loading: true,
-      error: '',
-      ...(reset ? { items: [], page: 0, total: 0, checked: false, permitted: false } : {}),
-    });
+    const owner = session()?.userId || '';
+    const seq = ++this.sequence;
+    if (owner !== this.owner) {
+      this.owner = owner;
+      this.setData({
+        items: [],
+        page: 0,
+        total: 0,
+        loaded: false,
+        checked: false,
+        permitted: false,
+      });
+    }
+    this.retryReset = reset;
+    this.setData({ loading: true, error: '' });
+    const query = this.data.activeQuery;
+    const current = () => seq === this.sequence && owner === (session()?.userId || '');
     try {
       if (!isLoggedIn()) {
-        this.setData({ checked: true, permitted: false });
+        this.setData({
+          checked: true,
+          permitted: false,
+          items: [],
+          page: 0,
+          total: 0,
+          loaded: true,
+        });
         return;
       }
       const me = await api.me();
-      if (seq !== this.data.sequence) return;
+      if (!current()) return;
       if (me.qualification !== 'ACTIVE') {
-        this.setData({ checked: true, permitted: false });
+        this.setData({
+          checked: true,
+          permitted: false,
+          items: [],
+          page: 0,
+          total: 0,
+          loaded: true,
+        });
         return;
       }
-      const result = await api.members(reset ? 1 : this.data.page + 1, this.data.activeQuery);
+      const result = reset
+        ? await refreshPages((page) => api.members(page, query), this.data.page)
+        : await api.members(this.data.page + 1, query);
       const items = (await memberLabels(result.items)).map((item) => ({
         ...item,
         initial: item.name.slice(0, 1) || '陇',
       }));
-      if (seq === this.data.sequence)
+      if (current())
         this.setData({
           items: (reset ? [] : this.data.items).concat(items),
           page: result.page,
           total: result.total,
+          loaded: true,
           permitted: true,
           checked: true,
         });
     } catch (e) {
-      if (seq === this.data.sequence) this.setData({ error: errorText(e), items: [] });
+      if (current()) {
+        if (e instanceof ApiError && [401, 403, 404].includes(e.status))
+          this.setData({ items: [], permitted: false, checked: false, loaded: false });
+        this.setData({ error: errorText(e) });
+      }
     } finally {
-      if (seq === this.data.sequence) this.setData({ loading: false });
+      if (seq === this.sequence) this.setData({ loading: false });
       wx.stopPullDownRefresh();
     }
   },

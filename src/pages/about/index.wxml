@@ -1,11 +1,36 @@
-<custom-nav title="关于西引力.陇聚" back />
-<view class="page">
-  <view class="title">西引力.陇聚</view>
+<custom-nav title="关于西引力·陇聚" back />
+<view class="page about-page">
+  <view class="title">西引力·陇聚</view>
   <view class="muted">西安 · 甘肃老乡社群</view>
-  <view class="card">
-    相聚长安，共叙陇情。
-    <view>在这里认识老乡、参与相聚，让乡情在这座城继续。</view>
+  <view class="about-meaning">西安吸引陇原儿女，甘肃人团聚在西安。</view>
+  <view class="card about-positioning">
+    <view class="section">我们的定位</view>
+    <view class="about-paragraph">
+      立足西安的甘肃老乡公益社群，全程去商业化运营。以联结乡情、同乡互助为根基，公益推广甘肃优质农特产品与本土文旅资源，聚力讲好新时代陇原故事。
+    </view>
   </view>
+  <view class="about-copy">
+    <view class="section">以乡情为纽带，以真诚为核心，以互助为宗旨</view>
+    <view class="about-paragraph">
+      社群自创立以来，始终坚守这份初心，致力于打造干净纯粹、温暖正向、无营销套路的甘肃同乡交流圈层。
+    </view>
+    <view class="about-paragraph">
+      社群所有线上交流、线下联谊、行业交流、资源互助等活动，均为乡友自发组织的公益社交行为，纯乡情、纯互助、纯公益。
+    </view>
+    <view class="section">乡情联谊 · 同乡互助 · 资源共享 · 聚力共赢</view>
+    <view class="about-paragraph">
+      依托在陕甘肃乡贤圈层优势，主动承担推介家乡、传播陇韵的社会责任。以乡情为载体，积极对外推广甘肃地道农特产品、本土风物特产、特色民俗文化与优质文旅资源。
+    </view>
+    <view class="section">让陇原好物被看见，让家乡故事被听见</view>
+    <view class="about-paragraph">
+      助力兰州、天水、平凉、临夏、会宁等各地陇原好物走出山野、走进西安，让更多西安民众认识甘肃、了解甘肃、喜爱甘肃。
+    </view>
+    <view class="section">让在外陇人有温暖港湾，让大美甘肃有更广声量</view>
+    <view class="about-paragraph">
+      未来，西引力·陇聚将持续深耕乡贤文化、凝聚陇人力量、坚守公益本心。在纯粹干净的社群氛围中，实现乡友抱团互助、家乡资源对外赋能。
+    </view>
+  </view>
+  <view class="divider about-sources-divider" />
   <view class="section">图片来源与许可</view>
   <view class="card">
     <view>莫高窟装饰图</view>
@@ -44,6 +69,19 @@
   <button class="link" data-url="https://creativecommons.org/licenses/by-sa/4.0/" bindtap="copy">
     复制 CC BY-SA 4.0 许可地址
   </button>
+  <view class="card">
+    <view>飞天壁画装饰</view>
+    <view class="muted">
+      活动页装饰取自敦煌莫高窟第285窟飞天壁画，古代佚名画工，公有领域；经透明裁切与缩小，仅作地域文化装饰。
+    </view>
+    <button
+      class="link"
+      data-url="https://commons.wikimedia.org/wiki/File:Dunhuang_mural_flying_apsarasa.jpg"
+      bindtap="copy"
+    >
+      复制飞天原图来源
+    </button>
+  </view>
   <button class="link" data-url="https://creativecommons.org/licenses/by/2.0/" bindtap="copy">
     复制 CC BY 2.0 许可地址
   </button>

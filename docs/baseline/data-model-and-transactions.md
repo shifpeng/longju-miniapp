@@ -47,7 +47,7 @@ erDiagram
 | `user_account` | id、status、auth_epoch、privacy_epoch、closure_requested_at、closed_at | 状态 ACTIVE / DISABLED / CLOSING / CLOSED；账号状态与成员资格分开；注销/删除资料递增 privacy_epoch，使旧文件快照失效 |
 | `wechat_identity` | user_id、appid、openid | 唯一 `(appid, openid)`；不保存登录 code，不将手机号当主键 |
 | `auth_session` | token_hash、subject_type、user_id 或 admin_id、auth_epoch、issued_at、expires_at、last_seen_at、revoked_at、mfa_at | token_hash 唯一；主体类型决定且仅有一个主体 FK 非空；索引主体/到期时间 |
-| `member_profile` | user_id、qualification、name、phone_cipher、phone_hmac、phone_source、phone_verified_at、hometown_code、residence_code、industry_code、introduction、help_text、avatar_asset_id、directory_visible、phone_visible、version | user_id 唯一；qualification 为 NONE / ACTIVE / DISABLED / LEFT；phone_source 一期为 MANUAL，verified_at 为空 |
+| `member_profile` | user_id、qualification、name、phone_cipher、phone_hmac、phone_source、phone_verified_at、hometown_code、residence_code、industry_code、introduction、help_text、avatar_asset_id、directory_visible、version | user_id 唯一；qualification 为 NONE / ACTIVE / DISABLED / LEFT；phone_source 一期为 MANUAL，verified_at 为空；联系电话只用于有权限的运营联系，不向成员名录公开 |
 | `membership_application` | user_id、attempt_no、current_revision_id、status、version | user_id 唯一，一人一个聚合；每轮申请用 attempt_no 区分 |
 | `application_revision` | application_id、attempt_no、revision_no、资料快照、协议版本、同意时间、submitted_at | 唯一 `(application_id, attempt_no, revision_no)`；提交后不可改；电话快照加密 |
 | `membership_review` | revision_id、decision、public_reason、reviewer_id、reviewed_at | revision_id 唯一，每次提交只有一个审核结论；内部备注不放此表的公开字段 |

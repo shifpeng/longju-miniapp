@@ -1,0 +1,40 @@
+<custom-nav title="个人信息保护指引" back />
+<view class="page privacy-page">
+  <view class="title">个人信息保护指引</view>
+  <view wx:if="{{publication.status !== 'PUBLISHED' || missing.length}}" class="card privacy-draft">
+    <view class="section">提审前仍需补齐真实信息</view>
+    <view class="muted">当前页面是基于已实现功能整理的草稿，不能直接作为已发布隐私指引。</view>
+    <view wx:if="{{missing.length}}" class="privacy-missing">
+      <view wx:for="{{missing}}" wx:key="*this">· {{item}}</view>
+    </view>
+    <view class="muted small">
+      还需在微信公众平台配置并核对「用户隐私保护指引」，确保与本页一致。
+    </view>
+  </view>
+  <view class="card">
+    <view>版本：{{publication.version || '未配置'}}</view>
+    <view>生效日期：{{publication.effectiveDate || '未配置'}}</view>
+    <view>个人信息处理者：{{publication.controllerName || '待填写微信认证主体全称'}}</view>
+    <view>隐私联系渠道：{{publication.contact || '待填写可用联系方式'}}</view>
+    <view wx:if="{{publication.version}}" class="divider" />
+    <view>申请资料保存期限：{{publication.retention.applications || '待确认'}}</view>
+    <view>成员资料保存期限：{{publication.retention.memberProfiles || '待确认'}}</view>
+    <view>
+      报名与签到记录保存期限：{{publication.retention.registrationsAndCheckins || '待确认'}}
+    </view>
+    <view>反馈内容保存期限：{{publication.retention.feedback || '待确认'}}</view>
+    <view>安全与运行日志保存期限：{{publication.retention.operationLogs || '待确认'}}</view>
+  </view>
+  <view class="card" wx:if="{{platformContractName}}">
+    <view>微信平台指引：{{platformContractName}}</view>
+    <view class="muted">
+      {{platformNeedsAuthorization ? '微信提示尚需完成隐私授权。' : '微信当前未提示需要隐私授权。'}}
+    </view>
+    <button class="secondary" bindtap="openPlatformContract">打开微信平台隐私指引</button>
+  </view>
+  <view wx:if="{{platformError}}" class="error">{{platformError}}</view>
+  <view wx:for="{{sections}}" wx:key="title" class="card">
+    <view class="section">{{item.title}}</view>
+    <view class="muted body privacy-body">{{item.body}}</view>
+  </view>
+</view>

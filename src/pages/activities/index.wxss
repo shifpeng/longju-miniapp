@@ -1,7 +1,25 @@
 .activity-list-page {
+  position: relative;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 14px;
+}
+.activity-list-page > view,
+.activity-list-page > button,
+.activity-list-page > activity-card,
+.activity-list-page > load-status {
+  position: relative;
+  z-index: 1;
+}
+.activities-apsara {
+  position: absolute;
+  top: 0;
+  right: 16px;
+  width: 168px;
+  height: 154px;
+  max-width: 46%;
+  opacity: 0.22;
+  pointer-events: none;
 }
 .activity-list-page .filters {
   gap: 8px;
@@ -18,17 +36,19 @@
   line-height: 20px;
 }
 .activity-list-page .filters button:not(.secondary) {
-  background: #e4e5d8;
+  background: #e8ece5;
   color: #36524e;
+  border: 1px solid #cbd5c9;
+  font-weight: 500;
 }
 .activity-list-page .filters button.secondary {
-  background: #fffcf5;
+  background: transparent;
 }
 .activity-list-page > .title {
   margin: 0;
 }
 .activity-list-page > .muted {
-  margin-top: -16px;
+  margin-top: -10px;
   font-size: 14px;
 }
 .activity-list-page > activity-card {

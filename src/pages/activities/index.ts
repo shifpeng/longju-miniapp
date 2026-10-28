@@ -1,3 +1,4 @@
+import { refreshPages } from '../../lib/refresh';
 import { api } from '../../api/client';
 import { errorText } from '../../api/request';
 import { activityView } from '../../lib/view';
@@ -11,6 +12,7 @@ Page({
     total: 0,
     lifecycle: '',
     sequence: 0,
+    loaded: false,
   },
   onShow() {
     selectTab(2);
@@ -22,18 +24,27 @@ Page({
   onReachBottom() {
     if (this.data.items.length < this.data.total) void this.load(false);
   },
+  retryReset: true,
   retry() {
-    void this.load(this.data.page === 0);
+    void this.load(this.retryReset);
+  },
+  loadMore() {
+    void this.load(false);
   },
   async load(reset: boolean) {
     if (this.data.loading && !reset) return;
     const seq = ++this.data.sequence;
     const page = reset ? 1 : this.data.page + 1;
-    this.setData({ loading: true, error: '', ...(reset ? { items: [], page: 0, total: 0 } : {}) });
+    const lifecycle = this.data.lifecycle;
+    this.retryReset = reset;
+    this.setData({ loading: true, error: '' });
     try {
-      const result = await api.activities(page, this.data.lifecycle);
+      const result = reset
+        ? await refreshPages((page) => api.activities(page, lifecycle), this.data.page)
+        : await api.activities(page, lifecycle);
       if (seq === this.data.sequence)
         this.setData({
+          loaded: true,
           items: (reset ? [] : this.data.items).concat(result.items.map(activityView)),
           page: result.page,
           total: result.total,
@@ -46,7 +57,14 @@ Page({
     }
   },
   filter(e: WechatMiniprogram.TouchEvent) {
-    this.setData({ lifecycle: e.currentTarget.dataset.value });
+    if (this.data.lifecycle === e.currentTarget.dataset.value) return;
+    this.setData({
+      lifecycle: e.currentTarget.dataset.value,
+      items: [],
+      page: 0,
+      total: 0,
+      loaded: false,
+    });
     void this.load(true);
   },
 });

@@ -1,5 +1,7 @@
 # 一期关键接口契约
 
+2026-10-28增量（当前机器可读契约0.1.72）：申请姓名/简介、成员资料修改及反馈正文须通过服务端微信文本安全检测。检测不通过返回400 FIELD_VALIDATION_FAILED，检测不可用返回503且不写入；成功同键同内容请求保留幂等重放。图片检测接入前仅允许保留/移除当前头像，禁止关联新头像。无请求字段改名，详细行为见longju-api/docs/CONTENT-SECURITY.md；src/api/schema.d.ts及来源哈希已同步。
+
 版本：2026-09-22，语言无关的开发契约。本文已确定跨端字段、状态、并发及错误行为；用户授权编码后将其转为后端独立仓库中的 `longju-api/contracts/openapi.yaml` 并由构建校验，当前不建立应用工程。两个前端仓库按明确的契约发布版本使用和验证接口，后端为契约唯一维护源。
 
 ## 1. 通用协议
@@ -39,7 +41,7 @@
 | POST `A/auth/logout` | 空 | 撤销当前令牌；重复退出可成功 |
 | GET `A/me` | Bearer | `{userId,accountStatus,qualification,applicationSummary,profile,allowedActions}`；本人资料可读，内部备注不可读 |
 | PUT `A/me/profile` | ProfileInput、If-Match | 当前资料与 version；资格不能由此修改；仅已审核并有档案用户编辑 |
-| PUT `A/me/privacy` | `{directoryVisible,phoneVisible}`、If-Match | 更新公开设置，立即作用于后续名录请求 |
+| PUT `A/me/profile` | `{name,hometownCode,residenceCode,industryCode,introduction,avatarAssetId,directoryVisible}`、If-Match | 更新本人资料和名录资料展示设置；联系电话不接受公开设置，名录接口不返回电话 |
 | POST `A/me/membership-exit` | `{confirmed:true}`、If-Match、幂等键 | LEFT；展示既有报名保留的结果与后续操作 |
 | POST `A/me/closure` | `{confirmationCode,confirmed:true}`、幂等键 | 202 `{state:"CLOSING"}`；confirmationCode 为新获取的微信 code，换取身份必须与当前账号相同 |
 | GET `A/home` | 可匿名 | 有效公告、近期活动、资格/申请摘要；匿名无私有字段 |

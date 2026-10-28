@@ -1,19 +1,24 @@
 import { api } from '../../api/client';
-import { isLoggedIn, login, logout, errorText } from '../../api/request';
+import { isLoggedIn, login, logout, errorText, session } from '../../api/request';
 import type { Me } from '../../api/types';
 import { membership, go, confirm } from '../../lib/view';
 import { selectTab } from '../../lib/view';
+import { runtime } from '../../config/runtime';
 Page({
   data: {
     me: null as Me | null,
     card: membership(null),
     loggedIn: false,
     loading: false,
+    loaded: false,
     error: '',
     qualificationLabel: '',
     identityName: '欢迎来到老乡社群',
     identityInitial: '陇',
+    agreementReady: !!(runtime.agreement.version && runtime.agreement.body),
   },
+  owner: '',
+  sequence: 0,
   onShow() {
     selectTab(3);
     void this.load();
@@ -22,15 +27,23 @@ Page({
     void this.load();
   },
   async load() {
-    this.setData({
-      loading: true,
-      error: '',
-      me: null,
-      loggedIn: isLoggedIn(),
-      card: membership(null),
-    });
+    const owner = session()?.userId || '';
+    const seq = ++this.sequence;
+    if (owner !== this.owner) {
+      this.owner = owner;
+      this.setData({
+        me: null,
+        card: membership(null),
+        loaded: false,
+        qualificationLabel: '',
+        identityName: '欢迎来到老乡社群',
+        identityInitial: '陇',
+      });
+    }
+    this.setData({ loading: true, error: '', loggedIn: !!owner });
     try {
       const me = isLoggedIn() ? await api.me() : null;
+      if (seq !== this.sequence || owner !== (session()?.userId || '')) return;
       const applicationStatus = me?.applicationSummary?.status;
       const qualificationLabel = me
         ? (
@@ -51,6 +64,7 @@ Page({
         : '';
       const identityName = me?.profile?.name || (isLoggedIn() ? '老乡，你好' : '欢迎来到老乡社群');
       this.setData({
+        loaded: true,
         me,
         card: membership(me),
         loggedIn: isLoggedIn(),
@@ -59,9 +73,10 @@ Page({
         identityInitial: me?.profile?.name?.slice(0, 1) || '陇',
       });
     } catch (e) {
-      this.setData({ error: errorText(e) });
+      if (seq === this.sequence && owner === (session()?.userId || ''))
+        this.setData({ error: errorText(e) });
     } finally {
-      this.setData({ loading: false });
+      if (seq === this.sequence) this.setData({ loading: false });
       wx.stopPullDownRefresh();
     }
   },

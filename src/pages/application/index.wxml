@@ -1,7 +1,22 @@
 <custom-nav title="申请加入" back />
 <view class="page application-page">
   <view class="title">{{statusTitle}}</view>
-  <view class="muted body">{{detail}}</view>
+  <view
+    wx:if="{{application && (application.status === 'NEEDS_INFO' || application.status === 'REJECTED')}}"
+    class="application-review"
+    role="note"
+    aria-label="审核意见"
+  >
+    <view class="application-review-heading">
+      <view class="application-review-mark" aria-hidden="{{true}}">!</view>
+      <view>审核意见 · {{application.status === 'NEEDS_INFO' ? '请补充资料' : '未通过原因'}}</view>
+    </view>
+    <text class="application-review-reason" selectable>{{detail}}</text>
+    <view wx:if="{{canSubmit}}" class="application-review-hint">
+      请根据以上意见修改下方资料，再提交审核。
+    </view>
+  </view>
+  <view wx:else class="muted body">{{detail}}</view>
   <view wx:if="{{canSubmit}}" class="application-progress">
     <view class="application-step application-step-current"><view>1 · 填写资料</view></view>
     <view class="application-step"><view>2 · 等待审核</view></view>
@@ -15,12 +30,15 @@
     <button class="secondary" bindtap="load">刷新申请状态</button>
   </view>
   <block wx:if="{{canSubmit}}">
+    <view class="page-note">
+      <view class="muted">
+        申请所需的姓名、联系电话和个人资料用于审核及必要联系；具体处理方式见个人信息保护指引。
+      </view>
+      <navigator url="/pages/privacy/index" class="link">查看个人信息保护指引</navigator>
+    </view>
     <profile-form value="{{profile}}" disabled="{{saving}}" bind:change="change" />
-    <view class="muted">电话默认不向其他成员公开，仅供审核及已报名活动的组织联系。</view>
-    <button wx:if="{{agreementReady}}" class="link" bindtap="agreement">
-      阅读加入须知与隐私说明
-    </button>
-    <view wx:if="{{!agreementReady}}" class="muted">加入须知暂未发布，可直接提交申请。</view>
+    <view class="muted">联系电话仅供审核及已报名活动的组织联系，始终不向其他成员展示。</view>
+    <button wx:if="{{agreementReady}}" class="link" bindtap="agreement">阅读加入须知</button>
     <view class="error">{{submitError}}</view>
   </block>
   <button wx:if="{{submitError && !canSubmit}}" class="secondary" bindtap="load">
@@ -28,6 +46,9 @@
   </button>
   <view wx:if="{{!canSubmit}}" class="error">{{submitError}}</view>
   <view wx:if="{{canSubmit}}" class="application-sticky">
+    <view wx:if="{{privacySubmissionBlocked}}" class="error">
+      个人信息保护指引仍是草稿。补齐真实主体、联系渠道和保存期限后才能在体验版/正式版提交。
+    </view>
     <checkbox-group wx:if="{{agreementReady}}" bindchange="agree">
       <label class="application-consent">
         <checkbox
@@ -36,18 +57,31 @@
           disabled="{{saving || !agreementReady}}"
           color="#68481D"
         />
-        <text>我已阅读并同意加入须知与隐私说明</text>
+        <text>我已阅读并同意加入须知</text>
       </label>
     </checkbox-group>
-    <view wx:if="{{!agreementReady}}" class="application-agreement-note">
-      加入须知暂未发布，可直接提交申请。
+    <view wx:if="{{privacyNoticeReady}}">
+      <navigator url="/pages/privacy/index" class="link small">
+        阅读个人信息保护指引（版本 {{privacyNoticeVersion}}）
+      </navigator>
+      <checkbox-group bindchange="privacyNoticeAgree">
+        <label class="application-consent">
+          <checkbox
+            value="read"
+            checked="{{privacyNoticeAcknowledged}}"
+            disabled="{{saving}}"
+            color="#68481D"
+          />
+          <text>我已阅读并知悉个人信息保护指引</text>
+        </label>
+      </checkbox-group>
     </view>
     <view wx:if="{{submitError}}" class="error">{{submitError}}</view>
     <button
       class="application-submit"
       bindtap="submit"
       loading="{{saving}}"
-      disabled="{{saving || (agreementReady && !accepted)}}"
+      disabled="{{saving || privacySubmissionBlocked || (agreementReady && !accepted) || (privacyNoticeReady && !privacyNoticeAcknowledged)}}"
     >
       提交申请
     </button>

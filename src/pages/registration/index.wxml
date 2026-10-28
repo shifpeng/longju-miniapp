@@ -1,6 +1,6 @@
 <custom-nav title="报名详情" back />
 <view class="page">
-  <load-status loading="{{loading}}" error="{{error}}" bind:retry="load" />
+  <load-status loading="{{loading && !registration}}" error="{{error}}" bind:retry="load" />
   <block wx:if="{{registration}}">
     <text class="badge">{{label}}</text>
     <view class="title">{{activity.title || '我的报名'}}</view>
@@ -15,17 +15,16 @@
       已签到 {{registration.checkin.participantCount}} 人
     </view>
     <view wx:if="{{canCheckin}}" class="card">
-      <view class="section">向现场工作人员出示签到码</view>
-      <image wx:if="{{qrUrl}}" class="qr" src="{{qrUrl}}" mode="aspectFit" />
-      <view wx:if="{{qrUrl}}" class="muted">{{seconds}} 秒后失效，请勿转发或截图保存。</view>
-      <view wx:else class="muted">生成签到码后在有效期内出示。</view>
-      <button bindtap="checkin" disabled="{{saving || refreshSeconds > 0}}" loading="{{saving}}">
-        {{refreshSeconds > 0 ? refreshSeconds + ' 秒后可刷新' : '生成 / 刷新签到码'}}
-      </button>
+      <view class="section">现场扫码签到</view>
+      <view class="muted">
+        点击后将调用相机扫描现场活动二维码，仅用于核验本人及同行人员签到；不会将相机画面作为照片上传给运营方。
+      </view>
+      <navigator url="/pages/privacy/index" class="link">查看个人信息保护指引</navigator>
+      <button bindtap="checkin" disabled="{{saving}}" loading="{{saving}}">扫码签到</button>
       <button class="link" bindtap="load">刷新签到结果</button>
     </view>
     <view wx:elif="{{registration.status === 'ACTIVE' && !registration.checkin}}" class="muted">
-      当前无法生成签到码，请在签到开放期间刷新状态。
+      签到尚未开放或已结束，请在活动开始前30分钟至结束前扫码。
     </view>
     <view class="error">{{actionError}}</view>
     <button wx:if="{{canCancel}}" class="secondary" bindtap="cancel" disabled="{{saving}}">
@@ -34,3 +33,14 @@
     <button class="link" bindtap="load">刷新报名状态</button>
   </block>
 </view>
+
+<confirm-dialog
+  open="{{cancelDialog}}"
+  title="确认取消报名？"
+  content="将取消本人及同行共 {{registration.participantCount}} 人的报名。"
+  detail="取消截止：{{cancelClose || '请以活动规则为准'}}。取消后将释放名额，再次报名需以剩余名额为准。"
+  confirm-text="确认取消"
+  cancel-text="保留报名"
+  bind:confirm="confirmCancel"
+  bind:dismiss="dismissCancel"
+/>

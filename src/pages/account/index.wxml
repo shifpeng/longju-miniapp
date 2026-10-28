@@ -14,6 +14,9 @@
         退出社群会保留账号与已有报名；注销账号会冻结登录并进入资料清理流程。
       </view>
     </view>
+    <navigator url="/pages/privacy/index" class="link">
+      查看个人信息保护指引与注销处理说明
+    </navigator>
     <view wx:if="{{canExit}}" class="card">
       <view class="section">退出老乡社群</view>
       <view class="muted">已有报名不会自动取消，可继续在「我的报名」中处理。</view>

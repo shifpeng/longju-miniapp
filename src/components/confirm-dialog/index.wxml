@@ -1,0 +1,14 @@
+<view wx:if="{{open}}" class="confirm-layer" catchtouchmove="preventScroll">
+  <view class="confirm-shade" bindtap="dismiss" />
+  <view class="confirm-panel" role="dialog" aria-modal="{{true}}" aria-label="{{title}}">
+    <view class="confirm-handle" aria-hidden="{{true}}" />
+    <view class="confirm-mark" aria-hidden="{{true}}">!</view>
+    <view class="confirm-title">{{title}}</view>
+    <view class="confirm-content">{{content}}</view>
+    <view wx:if="{{detail}}" class="confirm-detail">{{detail}}</view>
+    <view class="confirm-actions">
+      <button class="secondary" bindtap="dismiss">{{cancelText}}</button>
+      <button bindtap="confirm">{{confirmText}}</button>
+    </view>
+  </view>
+</view>

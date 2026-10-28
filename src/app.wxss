@@ -1,9 +1,5 @@
 page {
   background: #f3efe6;
-  background-image: url('/assets/caravan.jpg');
-  background-position: center top;
-  background-size: 100% 100vh;
-  background-repeat: no-repeat;
   color: #292720;
   font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif;
   font-size: 15px;
@@ -17,23 +13,24 @@ textarea {
   box-sizing: border-box;
 }
 .page {
-  padding: 20px 20px calc(80px + env(safe-area-inset-bottom));
+  padding: 16px 20px calc(80px + env(safe-area-inset-bottom));
   max-width: 650px;
   margin: auto;
 }
 .title {
-  font-size: 25px;
+  font-size: 24px;
   line-height: 1.4;
-  font-weight: 500;
+  font-weight: 600;
   margin-bottom: 10px;
+  overflow-wrap: anywhere;
 }
 .section {
   font-size: 18px;
-  font-weight: 600;
-  margin: 24px 0 14px;
+  font-weight: 500;
+  margin: 18px 0 10px;
 }
 .muted {
-  color: #504c43;
+  color: #665f53;
   font-size: 14px;
 }
 .small {
@@ -41,10 +38,22 @@ textarea {
 }
 .card {
   background: #fffcf5;
-  border-radius: 18px;
-  padding: 20px;
-  margin: 16px 0;
+  border-radius: 16px;
+  padding: 16px;
+  margin: 12px 0;
   overflow: hidden;
+}
+.card > .section:first-child {
+  margin-top: 0;
+}
+.page-note {
+  margin: 12px 0 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #ded7c9;
+}
+.page-note .link {
+  display: flex;
+  align-items: center;
 }
 .ink {
   background: linear-gradient(125deg, #292926, #181c1c);
@@ -67,11 +76,14 @@ textarea {
 }
 .badge {
   display: inline-block;
-  border-radius: 7px;
+  border-radius: 6px;
   padding: 3px 10px;
-  background: #e4e5d8;
+  background: #e8ece5;
   color: #36524e;
   font-size: 12px;
+  line-height: 20px;
+  max-width: 100%;
+  overflow-wrap: anywhere;
 }
 .primary,
 button {
@@ -85,7 +97,8 @@ button {
   padding: 12px 16px;
   border-radius: 12px;
   color: #292720;
-  background: linear-gradient(112deg, #c49b59, #e4c792 39%, #cfa96b 62%, #dfc18a);
+  background: linear-gradient(110deg, #cfb17e, #e2cba5);
+  font-weight: 500;
   margin: 14px 0 0;
   white-space: normal;
 }
@@ -96,10 +109,14 @@ button[disabled] {
   opacity: 0.55;
   color: #504c43;
 }
+button.button-hover {
+  opacity: 0.82;
+}
 .secondary {
-  background: #fffcf5;
-  border: 1px solid #bfa77e;
-  color: #68481d;
+  background: #faf7f0;
+  border: 1px solid #d6cebf;
+  color: #4e594e;
+  font-weight: 400;
 }
 .link {
   color: #36524e;
@@ -108,6 +125,7 @@ button[disabled] {
   margin: 0;
   font-size: 14px;
   min-height: 44px;
+  font-weight: 400;
 }
 .error {
   color: #a44735;
@@ -122,24 +140,34 @@ button[disabled] {
   line-height: 1.8;
 }
 .field {
-  margin: 18px 0;
+  margin: 14px 0;
+}
+.field > picker + picker,
+.field > input + input,
+.field > textarea + input {
+  display: block;
+  margin-top: 12px;
 }
 .label {
   display: block;
   font-size: 14px;
   color: #504c43;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 input,
 .picker,
 textarea {
   background: #fffcf5;
-  border: 1px solid #95866d;
+  border: 1px solid #c9c0b1;
   border-radius: 12px;
   padding: 12px 14px;
   min-height: 50px;
   width: 100%;
   font-size: 15px;
+}
+input:focus,
+textarea:focus {
+  border-color: #8f794f;
 }
 .picker {
   position: relative;
@@ -159,7 +187,7 @@ textarea {
   transform: rotate(45deg);
 }
 textarea {
-  height: 125px;
+  height: 110px;
   line-height: 1.6;
 }
 .menu {
@@ -175,7 +203,7 @@ textarea {
   border-radius: 14px;
 }
 .empty {
-  padding: 24px 0;
+  padding: 18px 0;
   text-align: center;
   color: #504c43;
 }
@@ -209,7 +237,7 @@ textarea {
   width: 50px;
   height: 50px;
   border-radius: 14px;
-  background: #e7d6b7;
+  background: #eee4d3;
   color: #68481d;
   display: flex;
   align-items: center;
@@ -289,13 +317,16 @@ textarea {
 .success {
   color: #41634d;
 }
-@media (max-width: 350px) {
+@media (max-width: 375px) {
   .page {
     padding-left: 16px;
     padding-right: 16px;
   }
   .card {
-    padding: 16px;
+    padding: 14px;
+  }
+  .field {
+    margin: 12px 0;
   }
   .title {
     font-size: 23px;

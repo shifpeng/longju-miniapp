@@ -8,5 +8,5 @@ export const runtime = {
     typeof __LONGJU_API_ORIGIN__ === 'string'
       ? __LONGJU_API_ORIGIN__
       : 'https://admin.datrixtech.com',
-  agreement: { version: '', title: '加入须知与隐私说明', body: '' },
+  agreement: { version: '', title: '加入须知', body: '' },
 };

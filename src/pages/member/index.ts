@@ -44,8 +44,4 @@ Page({
       wx.stopPullDownRefresh();
     }
   },
-  call() {
-    const phone = this.data.member?.phone;
-    if (phone) wx.makePhoneCall({ phoneNumber: phone });
-  },
 });

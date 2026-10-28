@@ -39,7 +39,14 @@ export const api = {
   submitApplication: (data: Schema['ApplicationInput'], key: string, version?: number) =>
     request('/me/application/submissions', { method: 'POST', data, key, version }),
   profile: (data: Schema['UpdateMyProfileInput'], version: number) =>
-    request<Schema['PrivateProfile']>('/me/profile', { method: 'PATCH', data, version }),
+    request<Schema['PrivateProfile']>('/me/profile', { method: 'PUT', data, version }),
+  profileChange: () => request<Schema['ProfileChange'] | null>('/me/profile-change'),
+  directoryVisibility: (visible: boolean, version: number) =>
+    request<Schema['PrivateProfile']>('/me/directory-visibility', {
+      method: 'PUT',
+      data: { directoryVisible: visible },
+      version,
+    }),
   regions: (parentCode?: string) =>
     request<Option[]>('/dictionaries/regions?' + query({ parentCode }), { auth: 'public' }),
   industries: () => request<Option[]>('/dictionaries/industries', { auth: 'public' }),
@@ -74,11 +81,11 @@ export const api = {
       version,
       key,
     }),
-  checkin: (id: string) =>
-    request<Schema['CheckinTokenView']>(
-      `/me/registrations/${encodeURIComponent(id)}/checkin-token`,
-      { method: 'POST' },
-    ),
+  selfCheckin: (id: string, token: string) =>
+    request<Schema['CheckinMutation']>(`/me/registrations/${encodeURIComponent(id)}/checkin`, {
+      method: 'POST',
+      data: { token },
+    }),
   tickets: (data: Schema['MediaAccessTicketInput']) =>
     request<Schema['MediaAccessTicketResult']>('/media/access-tickets', { method: 'POST', data }),
   feedback: (data: Schema['FeedbackSubmitInput'], key: string) =>

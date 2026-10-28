@@ -1,13 +1,30 @@
 .members-page {
+  position: relative;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 12px;
+}
+.members-page > view,
+.members-page > button,
+.members-page > load-status {
+  position: relative;
+  z-index: 1;
+}
+.members-monument {
+  position: absolute;
+  top: 0;
+  right: 16px;
+  width: 144px;
+  height: 170px;
+  max-width: 42%;
+  opacity: 0.18;
+  pointer-events: none;
 }
 .members-page > .title {
   margin: 0;
 }
 .members-page > .muted:first-of-type {
-  margin-top: -12px;
+  margin-top: -8px;
 }
 .members-search {
   margin: 0;
@@ -29,7 +46,7 @@
 }
 .member-result {
   margin: 0;
-  padding: 20px;
+  padding: 16px;
 }
 .member-result-main {
   display: flex;
@@ -55,7 +72,7 @@
   line-height: 20px;
 }
 .member-result-tags {
-  margin-top: 16px;
+  margin-top: 12px;
 }
 .member-result-tags .badge {
   max-width: 100%;
@@ -63,7 +80,7 @@
   overflow-wrap: anywhere;
 }
 .member-result-intro {
-  margin-top: 12px;
+  margin-top: 8px;
   font-size: 14px;
   line-height: 24px;
   overflow-wrap: anywhere;
@@ -76,4 +93,9 @@
   border-top: 1.5px solid #504c43;
   border-right: 1.5px solid #504c43;
   transform: rotate(45deg);
+}
+@media (max-width: 375px) {
+  .member-result {
+    padding: 14px;
+  }
 }

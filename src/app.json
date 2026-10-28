@@ -13,6 +13,7 @@
     "pages/registration/index",
     "pages/feedback/index",
     "pages/agreement/index",
+    "pages/privacy/index",
     "pages/about/index",
     "pages/account/index"
   ],

@@ -1,5 +1,6 @@
 <custom-nav title="老乡录" />
 <view class="page members-page">
+  <image class="members-monument" src="/assets/mogao.png" mode="aspectFit" aria-hidden="true" />
   <view class="title">联络同乡</view>
   <view class="muted">按姓名搜索，找到同路的人。</view>
   <view wx:if="{{checked && !permitted}}" class="card">
@@ -33,7 +34,8 @@
         <view class="member-result-copy">
           <view class="member-result-name">{{item.name}}</view>
           <view class="muted member-result-meta">
-            {{item.hometownLabel}} · {{item.residenceLabel}}
+            <view>家乡：{{item.hometownLabel}}</view>
+            <view>现居：{{item.residenceLabel}}</view>
           </view>
         </view>
         <view class="member-chevron" />
@@ -44,16 +46,16 @@
     <view class="muted small">仅展示成员允许公开的资料，联系方式默认隐藏。</view>
   </block>
   <load-status
-    loading="{{loading}}"
+    loading="{{loading && !loaded}}"
     error="{{error}}"
-    empty="{{permitted && !items.length}}"
+    empty="{{!loading && permitted && !items.length}}"
     empty-text="没有找到相关老乡，试试其他姓名"
     bind:retry="retry"
   />
   <button
     wx:if="{{permitted && items.length < total && !loading}}"
     class="secondary"
-    bindtap="retry"
+    bindtap="loadMore"
   >
     加载更多
   </button>

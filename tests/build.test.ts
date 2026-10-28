@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { spawn } from 'node:child_process';
+import { spawn, spawnSync } from 'node:child_process';
 import { existsSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 
 test('rebuilding keeps declared pages readable and does not rewrite unchanged assets', async () => {
@@ -36,4 +36,15 @@ test('rebuilding keeps declared pages readable and does not rewrite unchanged as
     timestamps,
   );
   assert.equal(existsSync('dist/obsolete-build-test.js'), false);
+});
+
+test('release build refuses a local API address before overwriting the current package', () => {
+  const previous = readFileSync('dist/config/runtime.js');
+  const result = spawnSync(process.execPath, ['scripts/build.mjs', '--release'], {
+    env: { ...process.env, LONGJU_API_ORIGIN: 'http://127.0.0.1:8081' },
+    encoding: 'utf8',
+  });
+  assert.notEqual(result.status, 0);
+  assert.match(result.stderr, /提审构建仅允许正式API域名/);
+  assert.deepEqual(readFileSync('dist/config/runtime.js'), previous);
 });

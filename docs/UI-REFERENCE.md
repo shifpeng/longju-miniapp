@@ -2,6 +2,8 @@
 
 当前 UI 已确认；以下链接使用同级 reference 参考包，可从新目录直接打开，不需要旧工作区。
 
+2026-10-28：用户在既有主题上确认进行按钮配色、卡片层次和文字排版细化，小屏紧凑布局与底部图标/文字整块选中背景继续保留。当前小程序代码中的这轮增量样式及验证范围见[开发入口](START-HERE.md)，尚未回写原Figma或历史参考包。
+
 - [完整参考包说明](../../reference/README.md)
 - [小程序 Figma 首页](https://www.figma.com/design/dXJ5cqGqcDS4AozgWve5qv?node-id=29-65)
 - [后管 Figma 工作台](https://www.figma.com/design/dXJ5cqGqcDS4AozgWve5qv?node-id=124-875)

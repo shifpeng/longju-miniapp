@@ -6,14 +6,14 @@
     data-index="{{index}}"
     bindtap="switchTab"
   >
-    <view class="custom-tab-icon {{selected === index ? 'custom-tab-icon-active' : ''}}">
+    <view class="custom-tab-content {{selected === index ? 'custom-tab-content-active' : ''}}">
       <image
         src="{{selected === index ? item.selectedIconPath : item.iconPath}}"
         mode="aspectFit"
       />
-    </view>
-    <view class="custom-tab-label {{selected === index ? 'custom-tab-label-active' : ''}}">
-      {{item.text}}
+      <view class="custom-tab-label {{selected === index ? 'custom-tab-label-active' : ''}}">
+        {{item.text}}
+      </view>
     </view>
   </view>
 </view>

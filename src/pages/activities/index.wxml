@@ -1,5 +1,6 @@
 <custom-nav title="活动" />
 <view class="page activity-list-page">
+  <image class="activities-apsara" src="/assets/apsara.png" mode="aspectFit" aria-hidden="true" />
   <view class="title">近期活动</view>
   <view class="muted">以乡情为约，让每次相聚有所收获。</view>
   <view class="filters">
@@ -23,13 +24,13 @@
   </view>
   <activity-card wx:for="{{items}}" wx:key="id" item="{{item}}" />
   <load-status
-    loading="{{loading}}"
+    loading="{{loading && !loaded}}"
     error="{{error}}"
-    empty="{{!items.length}}"
+    empty="{{!loading && !items.length}}"
     empty-text="暂时没有活动"
     bind:retry="retry"
   />
-  <button wx:if="{{items.length < total && !loading}}" class="secondary" bindtap="retry">
+  <button wx:if="{{items.length < total && !loading}}" class="secondary" bindtap="loadMore">
     加载更多
   </button>
 </view>

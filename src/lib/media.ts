@@ -18,14 +18,17 @@ export async function mediaLinks(
   variant: 'DISPLAY' | 'THUMBNAIL' = 'DISPLAY',
 ) {
   if (!ids.length) return { urls: [], expiresAt: '' };
+  // Some existing API rows serialize BIGINT asset IDs as numbers, while ticket
+  // results follow the contract and return IDs as strings.
+  const normalizedIds = ids.map(String);
   const result = await api.tickets({
     contextType,
     contextId,
     version,
-    items: ids.map((assetId) => ({ assetId, variant })),
+    items: normalizedIds.map((assetId) => ({ assetId, variant })),
   });
-  const urls = ids.map((id) => {
-    const item = result.items.find((i) => i.assetId === id);
+  const urls = normalizedIds.map((id) => {
+    const item = result.items.find((i) => String(i.assetId) === id);
     if (!item) throw new Error('照片暂时无法查看，请重试');
     return /^https?:\/\//.test(item.url) ? item.url : runtime.apiOrigin + item.url;
   });

@@ -1,12 +1,12 @@
 .mine-page {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 14px;
 }
 .mine-membership {
   margin: 0;
-  padding: 18px;
-  border-radius: 18px;
+  padding: 16px;
+  border-radius: 16px;
   background:
     radial-gradient(
       ellipse at 105% 112%,
@@ -31,15 +31,19 @@
   line-height: 18px;
 }
 .mine-status {
-  color: #cbc2b1;
-  font-size: 11px;
-  line-height: 16px;
+  color: #dfcfb2;
+  font-size: 12px;
+  line-height: 18px;
+  border: 1px solid #cfb98f40;
+  border-radius: 6px;
+  padding: 2px 6px;
+  flex-shrink: 0;
 }
 .mine-identity {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-top: 14px;
+  margin-top: 10px;
 }
 .mine-avatar {
   width: 44px;
@@ -48,7 +52,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 14px;
+  border-radius: 12px;
   background: #343831;
   color: #cfb98f;
   font-size: 18px;
@@ -59,8 +63,10 @@
 }
 .mine-name {
   font-size: 18px;
+  font-weight: 500;
   line-height: 26px;
   color: #f0e4ce;
+  overflow-wrap: anywhere;
 }
 .mine-detail {
   color: #cbc2b1;
@@ -70,27 +76,49 @@
 .mine-membership button {
   width: 100%;
 }
+.mine-membership .secondary {
+  background: #ffffff08;
+  border-color: #cfb98f55;
+  color: #e4d2af;
+}
+.mine-membership .link {
+  color: #dfcfb2;
+}
 .mine-menu {
   margin: 0;
   padding-top: 4px;
   padding-bottom: 4px;
 }
 .mine-menu-row {
-  min-height: 52px;
+  min-height: 48px;
+  padding: 8px 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid #e0d8c8;
+  gap: 12px;
+  border-bottom: 1px solid #eae4d8;
   font-size: 14px;
 }
 .mine-menu-row:last-child {
   border-bottom: 0;
 }
 .mine-chevron {
+  flex-shrink: 0;
   width: 7px;
   height: 7px;
   margin-right: 4px;
   border-top: 1.5px solid #504c43;
   border-right: 1.5px solid #504c43;
   transform: rotate(45deg);
+}
+.mine-page > button {
+  margin-top: 0;
+}
+.mine-page > .empty {
+  padding: 8px 0;
+}
+@media (max-width: 375px) {
+  .mine-membership {
+    padding: 14px;
+  }
 }

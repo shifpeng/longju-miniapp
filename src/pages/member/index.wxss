@@ -1,6 +1,6 @@
 .member-detail {
   margin: 0;
-  padding: 24px 20px;
+  padding: 18px 16px;
   overflow-wrap: anywhere;
 }
 .member-detail-header {
@@ -30,21 +30,26 @@
   line-height: 20px;
 }
 .member-detail-intro {
-  margin-top: 20px;
+  margin-top: 16px;
 }
 .member-detail .body {
   font-size: 15px;
-  line-height: 28px;
+  line-height: 26px;
 }
 .member-detail-help {
-  margin-top: 28px;
+  margin-top: 20px;
 }
 .member-detail-help .section {
   margin: 0 0 12px;
 }
 .member-detail-contact {
-  margin-top: 24px;
-  padding-top: 20px;
+  margin-top: 18px;
+  padding-top: 14px;
   border-top: 1px solid #e0d8c8;
   line-height: 24px;
+}
+@media (max-width: 375px) {
+  .member-detail {
+    padding: 16px 14px;
+  }
 }

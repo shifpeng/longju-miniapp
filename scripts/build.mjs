@@ -2,6 +2,11 @@ import { build, context } from 'esbuild';
 import { mkdir, readdir, readFile, rename, rm, watch, writeFile } from 'node:fs/promises';
 import { dirname, join, relative, resolve } from 'node:path';
 const watching = process.argv.includes('--watch');
+const release = process.argv.includes('--release');
+const productionOrigin = 'https://admin.datrixtech.com';
+const apiOrigin = process.env.LONGJU_API_ORIGIN || productionOrigin;
+if (release && apiOrigin !== productionOrigin)
+  throw new Error('提审构建仅允许正式API域名，请清除LONGJU_API_ORIGIN后重新构建。');
 async function files(dir) {
   const entries = await readdir(dir, { withFileTypes: true });
   return (
@@ -77,9 +82,7 @@ const options = {
     },
   ],
   define: {
-    __LONGJU_API_ORIGIN__: JSON.stringify(
-      process.env.LONGJU_API_ORIGIN || 'https://admin.datrixtech.com',
-    ),
+    __LONGJU_API_ORIGIN__: JSON.stringify(apiOrigin),
   },
 };
 if (watching) {

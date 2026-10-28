@@ -34,6 +34,11 @@ Page({
   consent(e: WechatMiniprogram.SwitchChange) {
     this.setData({ contactConsent: e.detail.value });
   },
+  toggleConsent() {
+    if (this.data.saving) return;
+    this.setData({ contactConsent: !this.data.contactConsent });
+  },
+  stopConsentTap() {},
   retry() {
     void this.load(this.data.page === 0);
   },

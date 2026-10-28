@@ -2,6 +2,7 @@ import { api } from '../../api/client';
 import { errorText, ApiError } from '../../api/request';
 import type { Profile, ProfileInput } from '../../api/types';
 import { validProfile } from '../../lib/view';
+import type { Schema } from '../../api/types';
 Page({
   data: {
     loading: false,
@@ -11,6 +12,7 @@ Page({
     profile: null as Profile | null,
     canEdit: false,
     dirty: false,
+    review: null as Schema['ProfileChange'] | null,
   },
   onLoad() {
     void this.load();
@@ -22,9 +24,12 @@ Page({
     if (this.data.saving) return;
     this.setData({ loading: true, error: '' });
     try {
-      const me = await api.me();
-      this.setData({ canEdit: me.qualification === 'ACTIVE' });
-      if (!this.data.dirty) this.setData({ profile: me.profile });
+      const [me, review] = await Promise.all([api.me(), api.profileChange()]);
+      this.setData({ canEdit: me.qualification === 'ACTIVE', review });
+      if (!this.data.dirty) {
+        const draft = review && ['PENDING', 'REJECTED'].includes(review.status) ? review.draft : {};
+        this.setData({ profile: me.profile ? { ...me.profile, ...draft } : null });
+      }
     } catch (e) {
       this.setData({ error: errorText(e), canEdit: false });
     } finally {
@@ -36,23 +41,25 @@ Page({
     if (this.data.profile)
       this.setData({ profile: { ...this.data.profile, ...e.detail }, dirty: true });
   },
-  directory(e: WechatMiniprogram.SwitchChange) {
-    if (this.data.profile)
+  async directory(e: WechatMiniprogram.SwitchChange) {
+    const profile = this.data.profile;
+    if (!profile || !this.data.canEdit || this.data.saving) return;
+    this.setData({ saving: true, submitError: '' });
+    try {
+      const result = await api.directoryVisibility(e.detail.value, profile.version);
       this.setData({
-        profile: {
-          ...this.data.profile,
-          directoryVisible: e.detail.value,
-          phoneVisible: e.detail.value && this.data.profile.phoneVisible,
-        },
-        dirty: true,
+        profile: { ...profile, directoryVisible: result.directoryVisible, version: result.version },
       });
-  },
-  phone(e: WechatMiniprogram.SwitchChange) {
-    if (this.data.profile)
-      this.setData({
-        profile: { ...this.data.profile, phoneVisible: e.detail.value },
-        dirty: true,
+      wx.showToast({
+        title: result.directoryVisible ? '已允许展示' : '已停止展示',
+        icon: 'success',
       });
+    } catch (e) {
+      this.setData({ profile: { ...profile }, submitError: errorText(e) });
+      if (e instanceof ApiError && e.code === 'VERSION_CONFLICT') this.setData({ canEdit: false });
+    } finally {
+      this.setData({ saving: false });
+    }
   },
   async save() {
     const p = this.data.profile;
@@ -69,12 +76,22 @@ Page({
           introduction: p.introduction,
           avatarAssetId: p.avatarAssetId,
           directoryVisible: p.directoryVisible,
-          phoneVisible: p.phoneVisible,
         },
         p.version,
       );
-      this.setData({ profile, dirty: false });
-      wx.showToast({ title: '已保存', icon: 'success' });
+      this.setData({ profile: { ...p, version: profile.version }, dirty: false });
+      const review = await api.profileChange();
+      this.setData({
+        review,
+        profile:
+          review && ['PENDING', 'REJECTED'].includes(review.status)
+            ? { ...profile, ...review.draft }
+            : profile,
+      });
+      wx.showToast({
+        title: review?.status === 'PENDING' ? '已提交审核' : '已保存',
+        icon: 'success',
+      });
     } catch (e) {
       this.setData({ submitError: errorText(e) });
       if (e instanceof ApiError && e.code === 'VERSION_CONFLICT')

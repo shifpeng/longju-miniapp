@@ -18,6 +18,11 @@ let definition: any;
 const { api } = require('../dist/api/client.js');
 const { ApiError } = require('../dist/api/request.js');
 const { Intent } = require('../dist/lib/intent.js');
+const { mediaUrls } = require('../dist/lib/media.js');
+const {
+  isPrivacyPublicationReady,
+  privacyPublicationMissing,
+} = require('../dist/config/privacy.js');
 function page(name: string) {
   delete require.cache[require.resolve('../dist/pages/' + name + '/index.js')];
   require('../dist/pages/' + name + '/index.js');
@@ -30,6 +35,67 @@ function page(name: string) {
   };
   return instance;
 }
+test('media ticket IDs match when existing activity rows serialize BIGINT IDs as numbers', async () => {
+  const originalTickets = api.tickets;
+  let requestedAssetId: string | undefined;
+  api.tickets = async (input: any) => {
+    requestedAssetId = input.items[0].assetId;
+    return {
+      expiresAt: '2026-10-15T06:00:00Z',
+      items: [
+        {
+          assetId: '17',
+          variant: 'DISPLAY',
+          url: '/api/v1/media/assets/17/DISPLAY?ticket=test',
+        },
+      ],
+    };
+  };
+  try {
+    const urls = await mediaUrls('ACTIVITY', '3', 4, [17] as unknown as string[]);
+    assert.equal(requestedAssetId, '17');
+    assert.equal(
+      urls[0],
+      'https://admin.datrixtech.com/api/v1/media/assets/17/DISPLAY?ticket=test',
+    );
+  } finally {
+    api.tickets = originalTickets;
+  }
+});
+test('privacy notice is publishable after confirmed retention periods are configured', () => {
+  assert.equal(isPrivacyPublicationReady(), true);
+  assert.deepEqual(privacyPublicationMissing(), []);
+});
+test('release application lifecycle initializes published privacy version before loading account data', () => {
+  const p = page('application');
+  const wxMock = (globalThis as any).wx;
+  const previous = wxMock.getAccountInfoSync;
+  wxMock.getAccountInfoSync = () => ({ miniProgram: { envVersion: 'release' } });
+  let loaded = false;
+  p.load = () => {
+    loaded = true;
+    assert.equal(p.data.privacyNoticeReady, true);
+    assert.equal(p.data.privacyNoticeVersion, '1.0');
+    assert.equal(p.data.privacySubmissionBlocked, false);
+  };
+  try {
+    p.onLoad();
+    assert.equal(loaded, true);
+  } finally {
+    wxMock.getAccountInfoSync = previous;
+  }
+});
+test('application refuses submission outside develop while privacy publication is a draft', async () => {
+  const p = page('application');
+  p.setData({ privacySubmissionBlocked: true, canSubmit: true });
+  let submitted = false;
+  api.submitApplication = async () => {
+    submitted = true;
+  };
+  await p.submit();
+  assert.equal(submitted, false);
+  assert.match(p.data.submitError, /尚未完成发布配置/);
+});
 test('home keeps real application state when activity service fails', async () => {
   const p = page('home');
   api.announcements = async () => ({ items: [{ id: '8', title: '有效公告' }] });
@@ -92,22 +158,44 @@ test('registration capacity conflict preserves contact and companion count', asy
   assert.equal(p.data.canRegister, false);
   assert.equal(p.data.saving, false);
 });
-test('checkin QR is produced locally, removed on hide and expires without a timer leak', () => {
+test('member scans venue code and reloads registration after successful self checkin', async () => {
   const p = page('registration');
-  const token = {
-    token: 'a'.repeat(43),
-    expiresAt: new Date(Date.now() + 120000).toISOString(),
-    refreshAfter: new Date(Date.now() + 60000).toISOString(),
+  p.setData({ registration: { id: '81', activityId: '41' }, canCheckin: true });
+  const payload = 'longju:checkin:41:' + 'a'.repeat(43);
+  (globalThis as any).wx.scanCode = (o: any) => {
+    assert.equal(o.onlyFromCamera, true);
+    o.success({ result: payload });
   };
-  p.renderToken(token);
-  assert.match(p.data.qrUrl, /^data:image\/gif;base64,/);
-  assert.ok(p.timer);
-  p.onHide();
-  assert.equal(p.data.qrUrl, '');
-  assert.equal(p.timer, 0);
-  p.renderToken({ ...token, expiresAt: '2000-01-01T00:00:00Z' });
-  assert.equal(p.data.qrUrl, '');
-  assert.equal(p.timer, 0);
+  let scanned = false;
+  api.selfCheckin = async (id: string, token: string) => {
+    assert.equal(id, '81');
+    assert.equal(token, payload);
+    scanned = true;
+    return { result: 'CHECKED_IN' };
+  };
+  let loaded = false;
+  p.load = async () => {
+    loaded = true;
+  };
+  await p.checkin();
+  assert.equal(scanned, true);
+  assert.equal(loaded, true);
+  assert.equal(p.data.saving, false);
+});
+test('wrong activity QR and scanner cancellation do not submit checkin', async () => {
+  const p = page('registration');
+  p.setData({ registration: { id: '81', activityId: '41' }, canCheckin: true });
+  api.selfCheckin = async () => {
+    throw new Error('must not submit');
+  };
+  (globalThis as any).wx.scanCode = (o: any) =>
+    o.success({ result: 'longju:checkin:42:' + 'a'.repeat(43) });
+  await p.checkin();
+  assert.match(p.data.actionError, /本场活动/);
+  (globalThis as any).wx.scanCode = (o: any) => o.fail({ errMsg: 'scanCode:fail cancel' });
+  await p.checkin();
+  assert.equal(p.data.actionError, '');
+  assert.equal(p.data.saving, false);
 });
 test('status form returns to editable state after user cancels cancellation dialog', async () => {
   const p = page('registration');
@@ -191,12 +279,65 @@ test('unpublished agreement allows submission without claiming consent; publishe
   await p.submit();
   assert.equal(submitted.accepted, false);
   assert.equal(submitted.agreementVersion, '');
+  assert.equal(submitted.privacyNoticeAcknowledged, false);
+  assert.equal(submitted.privacyNoticeVersion, '');
   assert.equal(p.data.submitError, '');
   submitted = undefined;
   p.setData({ canSubmit: true, agreementReady: true, accepted: false });
   await p.submit();
   assert.equal(submitted, undefined);
   assert.match(p.data.submitError, /请阅读并同意/);
+});
+
+test('published privacy notice requires its own read acknowledgment and sends the version', async () => {
+  const p = page('application');
+  p.setData({
+    profile: {
+      name: '测试姓名',
+      phone: '13800138000',
+      hometownCode: '620102',
+      residenceCode: '610113',
+      industryCode: 'I',
+      introduction: '',
+    },
+    accepted: false,
+    agreementReady: false,
+    canSubmit: true,
+    privacyNoticeReady: true,
+    privacyNoticeVersion: '1.0',
+    privacyNoticeAcknowledged: false,
+  });
+  p.intent = { for: async () => 'privacy-test', failed() {}, clear() {} };
+  p.load = async () => {};
+  let submitted: any;
+  api.submitApplication = async (data: any) => {
+    submitted = data;
+  };
+  await p.submit();
+  assert.equal(submitted, undefined);
+  assert.match(p.data.submitError, /请阅读并确认个人信息保护指引/);
+  p.setData({ privacyNoticeAcknowledged: true });
+  await p.submit();
+  assert.equal(submitted.privacyNoticeAcknowledged, true);
+  assert.equal(submitted.privacyNoticeVersion, '1.0');
+});
+test('feedback contact consent responds to the switch and its full row and is sent on submit', async () => {
+  const p = page('feedback');
+  p.setData({ body: '反馈内容', loggedIn: true, contactConsent: false });
+  p.consent({ detail: { value: true } });
+  assert.equal(p.data.contactConsent, true);
+  p.toggleConsent();
+  assert.equal(p.data.contactConsent, false);
+  p.toggleConsent();
+  p.intent = { for: async () => 'feedback-key', failed() {}, clear() {} };
+  let sent: any;
+  api.feedback = async (_data: any) => {
+    sent = _data;
+    return {};
+  };
+  api.feedbackList = async () => ({ items: [], page: 1, pageSize: 20, total: 0 });
+  await p.submit();
+  assert.equal(sent.contactConsent, true);
 });
 
 test('home prioritizes membership and registrations, then uses authorized carousel photos', async () => {
@@ -276,7 +417,15 @@ test('home prioritizes membership and registrations, then uses authorized carous
     api.homeSummary = async () => ({
       me: { qualification: 'ACTIVE', profile: { name: '老乡' } } as any,
       nextGathering: null,
-      carousel: [{ activityId: '12', activityTitle: '往期相聚', recapVersion: 4, assetId: '45', caption: null }],
+      carousel: [
+        {
+          activityId: '12',
+          activityTitle: '往期相聚',
+          recapVersion: 4,
+          assetId: '45',
+          caption: null,
+        },
+      ],
     });
     await p.load();
     assert.match(p.data.carouselError, /轮播读取失败/);
@@ -571,5 +720,143 @@ test('late single-photo retry cannot overwrite a newer published recap image', a
   } finally {
     p.onUnload();
     wxMock.getStorageSync = originalStorage;
+  }
+});
+
+test('photo drawer opens only for published authorized photos and resets its reading state', async () => {
+  const wxMock = (globalThis as any).wx;
+  const originalStorage = wxMock.getStorageSync;
+  wxMock.getStorageSync = () => ({ userId: 'member', accessToken: 'test' });
+  try {
+    const p = page('activity');
+    p.visible = true;
+    p.loadMedia = async () => {};
+    p.setData({ recap: { state: 'PREPARING' }, photos: [{ url: 'test' }] });
+    await p.openRecap();
+    assert.equal(p.data.recapDrawer, false);
+    p.setData({ recap: { state: 'PUBLISHED', version: 1 }, recapExpanded: true, recapIndex: 2 });
+    await p.openRecap();
+    assert.equal(p.data.recapDrawer, true);
+    assert.equal(p.data.recapIndex, 0);
+    assert.equal(p.data.recapExpanded, false);
+    p.toggleRecap();
+    assert.equal(p.data.recapExpanded, true);
+    p.onHide();
+    assert.equal(p.data.recapDrawer, false);
+    wxMock.getStorageSync = () => null;
+    await p.openRecap();
+    assert.equal(p.data.recapDrawer, false);
+  } finally {
+    wxMock.getStorageSync = originalStorage;
+  }
+});
+
+test('late photo authorization cannot open a drawer after leaving or changing published recap', async () => {
+  const wxMock = (globalThis as any).wx;
+  const originalStorage = wxMock.getStorageSync;
+  wxMock.getStorageSync = () => ({ userId: 'member', accessToken: 'test' });
+  try {
+    for (const change of ['leave', 'version', 'account']) {
+      const p = page('activity');
+      p.visible = true;
+      p.setData({ recap: { state: 'PUBLISHED', version: 1 }, photos: [{ url: 'test' }] });
+      let complete!: () => void;
+      p.loadMedia = () =>
+        new Promise<void>((resolve) => {
+          complete = resolve;
+        });
+      const pending = p.openRecap();
+      if (change === 'leave') p.onHide();
+      if (change === 'version') p.setData({ recap: { state: 'PUBLISHED', version: 2 } });
+      if (change === 'account')
+        wxMock.getStorageSync = () => ({ userId: 'another', accessToken: 'test' });
+      complete();
+      await pending;
+      assert.equal(p.data.recapDrawer, false);
+    }
+  } finally {
+    wxMock.getStorageSync = originalStorage;
+  }
+});
+
+test('profile editor shows pending draft while keeping approved version and private settings', async () => {
+  const oldMe = api.me;
+  const oldReview = api.profileChange;
+  api.me = async () => ({
+    qualification: 'ACTIVE',
+    profile: {
+      name: '已审核姓名',
+      phone: '13800000000',
+      version: 7,
+      directoryVisible: false,
+      introduction: '已审核介绍',
+    },
+  });
+  api.profileChange = async () => ({
+    id: '9',
+    status: 'PENDING',
+    draft: { name: '待审姓名', introduction: '待审介绍' },
+    version: 1,
+  });
+  try {
+    const p = page('profile');
+    await p.load();
+    assert.equal(p.data.profile.name, '待审姓名');
+    assert.equal(p.data.profile.phone, '13800000000');
+    assert.equal(p.data.profile.version, 7);
+    assert.equal(p.data.profile.directoryVisible, false);
+    assert.equal(p.data.review.status, 'PENDING');
+  } finally {
+    api.me = oldMe;
+    api.profileChange = oldReview;
+  }
+});
+
+test('privacy switch saves immediately without submitting or replacing an edited profile draft', async () => {
+  const oldVisibility = api.directoryVisibility;
+  const oldProfile = api.profile;
+  let submitted = false;
+  api.profile = async () => {
+    submitted = true;
+  };
+  api.directoryVisibility = async (visible: boolean, version: number) => {
+    assert.equal(visible, false);
+    assert.equal(version, 7);
+    return { name: '已审核姓名', directoryVisible: false, version: 8 };
+  };
+  try {
+    const p = page('profile');
+    p.setData({
+      canEdit: true,
+      dirty: true,
+      profile: { name: '尚未提交的编辑', directoryVisible: true, version: 7 },
+    });
+    await p.directory({ detail: { value: false } });
+    assert.equal(submitted, false);
+    assert.equal(p.data.profile.name, '尚未提交的编辑');
+    assert.equal(p.data.profile.directoryVisible, false);
+    assert.equal(p.data.profile.version, 8);
+    assert.equal(p.data.dirty, true);
+  } finally {
+    api.directoryVisibility = oldVisibility;
+    api.profile = oldProfile;
+  }
+});
+
+test('failed privacy update retains original consent and edited content', async () => {
+  const original = api.directoryVisibility;
+  api.directoryVisibility = async () => {
+    throw new Error('网络错误');
+  };
+  try {
+    const p = page('profile');
+    p.setData({ canEdit: true, profile: { name: '编辑中', directoryVisible: true, version: 7 } });
+    await p.directory({ detail: { value: false } });
+    assert.equal(p.data.profile.directoryVisible, true);
+    assert.equal(p.data.profile.name, '编辑中');
+    assert.equal(p.data.saving, false);
+    assert.equal(p.data.submitError, '网络错误');
+  } finally {
+    api.directoryVisibility = original;
   }
 });

@@ -1,8 +1,32 @@
 <custom-nav title="我的资料与隐私" back />
 <view class="page">
   <view class="title">我的资料与隐私</view>
-  <load-status loading="{{loading}}" error="{{error}}" bind:retry="load" />
+  <view class="page-note">
+    <view class="muted">
+      修改后的资料将在管理员审核通过后展示，审核期间仍展示原资料。展示开关保存后立即生效，联系电话不向其他成员展示。
+    </view>
+    <navigator url="/pages/privacy/index" class="link">查看个人信息保护指引</navigator>
+  </view>
+  <load-status loading="{{loading && !profile}}" error="{{error}}" bind:retry="load" />
   <block wx:if="{{profile}}">
+    <view
+      wx:if="{{review.status === 'PENDING' || review.status === 'REJECTED'}}"
+      class="card profile-review"
+    >
+      <view class="section">
+        {{review.status === 'PENDING' ? '已提交，等待管理员审核' : '资料修改未通过'}}
+      </view>
+      <view class="muted">
+        {{review.status === 'PENDING' ?
+        '下方为本次提交的资料，管理员审核通过后才会更新展示，审核期间老乡录仍展示原资料。再次提交将替换本次待审内容。'
+        : '原资料继续展示，请根据审核意见修改后重新提交。'}}
+      </view>
+      <!-- prettier-ignore -->
+      <text wx:if="{{review.publicReason}}" class="profile-review-reason" selectable>{{review.publicReason}}</text>
+    </view>
+    <view wx:elif="{{review.status === 'APPROVED'}}" class="muted">
+      最近一次资料修改已审核通过。
+    </view>
     <profile-form
       value="{{profile}}"
       phone-editable="{{false}}"
@@ -20,21 +44,11 @@
           bindchange="directory"
         />
       </view>
-      <view class="divider" />
-      <view class="row spread">
-        <view class="grow">允许其他成员查看电话</view>
-        <switch
-          checked="{{profile.phoneVisible}}"
-          disabled="{{saving || !canEdit || !profile.directoryVisible}}"
-          color="#36524E"
-          bindchange="phone"
-        />
-      </view>
-      <view class="muted small">公开电话需同时公开名录资料。</view>
+      <view class="muted small">切换后立即保存；关闭后资料不再出现在老乡录。</view>
     </view>
     <view class="error">{{submitError}}</view>
     <button wx:if="{{canEdit}}" bindtap="save" loading="{{saving}}" disabled="{{saving}}">
-      保存资料与隐私设置
+      提交资料修改审核
     </button>
   </block>
   <view wx:elif="{{!loading && !error}}" class="empty">审核通过后可管理成员资料与隐私。</view>

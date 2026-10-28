@@ -1,5 +1,5 @@
 <view
-  class="card {{compact ? 'compact-card' : ''}}"
+  class="card event-card {{compact ? 'compact-card' : ''}}"
   bindtap="open"
   role="button"
   aria-label="{{item.title}}"
@@ -12,18 +12,18 @@
   />
   <view class="row spread">
     <text class="badge">{{item.statusText}}</text>
-    <text class="muted small">{{item.listDate}}</text>
+    <text class="muted small event-date">{{item.listDate}}</text>
   </view>
   <view class="section">{{item.title}}</view>
-  <view class="muted">{{item.place}}</view>
+  <view class="muted event-place">{{item.place}}</view>
   <view wx:if="{{item.summaryPreview && !compact}}" class="muted activity-summary">
     {{item.summaryPreview}}
   </view>
-  <view class="row spread">
+  <view class="row spread event-footer">
     <text class="small muted">
       {{compact && item.summaryPreview ? item.summaryPreview : item.lifecycle === 'ENDED' ?
       '查看活动与回顾' : '查看活动详情'}}
     </text>
-    <text>→</text>
+    <text class="event-arrow" aria-hidden="true">→</text>
   </view>
 </view>

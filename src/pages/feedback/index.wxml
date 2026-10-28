@@ -7,12 +7,13 @@
     <view class="divider" />
     <view>如何取消报名或签到？</view>
     <view class="muted">
-      进入「我的报名」查看详情，在允许取消的时间内操作；签到开放后可出示签到码。
+      进入「我的报名」查看详情，在允许取消的时间内操作；签到开放后点击「扫码签到」，扫描本场活动的现场二维码。
     </view>
   </view>
   <view wx:if="{{!loggedIn}}" class="card">
     <view>登录后可提交反馈并查看回复。</view>
     <button bindtap="signIn">微信登录</button>
+    <navigator url="/pages/privacy/index" class="link">登录前查看个人信息保护指引</navigator>
   </view>
   <block wx:else>
     <picker range="{{types}}" value="{{typeIndex}}" bindchange="type" disabled="{{saving}}">
@@ -27,11 +28,16 @@
         placeholder="请描述你的建议或遇到的问题（最多 2000 字）"
       />
     </view>
-    <view class="row spread">
+    <view class="muted">
+      反馈内容用于处理你提交的问题或建议；只有你开启下方选项时，运营人员才会通过联系电话联系你。
+    </view>
+    <navigator url="/pages/privacy/index" class="link">查看个人信息保护指引</navigator>
+    <view class="row spread" bindtap="toggleConsent">
       <text class="grow">允许运营组通过我的联系电话联系我</text>
       <switch
         checked="{{contactConsent}}"
         bindchange="consent"
+        catchtap="stopConsentTap"
         disabled="{{saving}}"
         color="#36524E"
       />
